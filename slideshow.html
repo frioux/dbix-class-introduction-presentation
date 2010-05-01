@@ -1,0 +1,920 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>DBIx::Class (aka DBIC)</title>
+<!-- metadata -->
+<meta name="contributor" content="youcan[64]netzgesta[46]de" />
+<meta name="publisher" content="s5.netzgesta.de" />
+<meta name="description" content="S5 1.3 is a very flexible and lightweight slide show system available for anyone to use (including transitions and scalable fonts and images)" />
+<meta name="keywords" content="S5, version 1.3, slide show, presentation-mode, projection-mode, powerpoint-like, scala-like, keynote-like, incremental display, scalable fonts, scalable images, transitions, notes, osf, xoxo, css, javascript, xhtml, public domain" />
+
+<meta name="generator" content="S5" />
+<meta name="version" content="1" />
+<meta name="subject" content="DBIx::Class" />
+<meta name="author" content="See first slide" />
+<meta name="company" content="N/A" />
+<meta name="robots" content="index, follow" />
+<meta name="revisit-after" content="7 days" />
+<!-- meta additionally -->
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" /><!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- configuration transition extension -->
+<meta name="tranSitions" content="true" />
+<meta name="fadeDuration" content="500" />
+<meta name="incrDuration" content="250" />
+<!-- configuration autoplay extension -->
+<meta name="autoMatic" content="false" />
+<meta name="playLoop" content="true" />
+<meta name="playDelay" content="10" />
+<!-- configuration audio extension -->
+<meta name="audioSupport" content="false" />
+<meta name="audioVolume" content="0" />
+<meta name="audioError" content="false" />
+<!-- configuration audio debug -->
+<meta name="audioDebug" content="false" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="ui/scala_utf/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="ui/scala_utf/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="ui/scala_utf/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="ui/scala_utf/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- embedded styles -->
+<style type="text/css" media="all">
+.imgcon {width: 100%; margin: 0 auto; padding: 0; text-align: center;}
+#anim {width: 33%; height: 320px; position: relative;}
+#anim img {position: absolute; top: 0px; left: 0px;}
+.red {color: red;}
+.grey {color: gray;}
+</style>
+<!-- S5 JS -->
+<script src="ui/scala_utf/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+   <div id="controls"><!-- DO NOT EDIT --></div>
+   <div id="currentSlide"><!-- DO NOT EDIT --></div>
+   <div id="header"></div>
+   <div id="footer">
+      <h1>DBIx::Class Introduction</h1>
+      <h2>YAPC::NA 2010</h2>
+   </div>
+</div>
+
+<div class="presentation">
+
+   <div class="slide">
+      <h1>DBIX::Class (aka DBIC)</h1>
+      <h3>for (advanced) beginners</h3>
+      <h4>Leo Lapworth @ LPW 2009</h4>
+      <h4><a href="http://leo.cuckoo.org/projects">http://leo.cuckoo.org/projects</a></h4>
+      <div class="handout"></div>
+   </div>
+
+   <div class="slide">
+      <h1>assumptions</h1>
+      <p>You know a little about Perl and using objects</p>
+      <p>You know a little bit about databases and using foreign keys</p>
+   </div>
+
+   <div class="slide">
+      <h1>DBIx::Class?</h1>
+      <ul>
+         <li>ORM (object relational mapper)</li>
+         <li>SQL &lt;-&gt; OO (using objects instead of SQL)</li>
+         <li>Simple, powerful, complex, fab and confusing</li>
+         <li>There are many ORMs, DBIx::Class just happens to be the best in Perl (personal opinion)</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>why this talk?</h1>
+      <ul>
+         <li>Help avoid mistakes I made!</li>
+         <li>Help learn DBIx::Class faster</li>
+         <li>Make your coding easier</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>point of note</h1>
+      <p><em>"Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it." - Brian W. Kernighan</em></p>
+      <p>This talk is about making it easy so we are less likely to get confused</p>
+   </div>
+
+   <div class="slide">
+      <h1>table setup</h1>
+   </div>
+
+   <div class="slide">
+      <h1>example...</h1>
+      <ul>
+         <li>Authors</li>
+         <li>Books</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>authors table</h1>
+<pre>CREATE TABLE authors(
+   id   int(8) primary key auto_increment,
+   name varchar(255)
+) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>tips</h1>
+      <p>Name tables as simple plurals (<strong>add an S</strong>) - makes relationships easier to understand</p>
+      <p>(issue: Matt Trout "Tables should not be plural as gives you plurals for Result:: package names which represent a single row" - talk may be rewritten in future to reflect this as this is better once you understand the relationship setup - either way, consistency is important)</p>
+      <p>Use a character set (<strong>UTF8</strong>) from the start (for international characters)</p>
+   </div>
+
+   <div class="slide">
+      <h1>authors table</h1>
+<pre>CREATE TABLE author<strong>s</strong>(
+   id   int(8) primary key auto_increment,
+   name varchar(255)
+) engine = <strong>InnoDB</strong> DEFAULT CHARSET=<strong>utf8</strong>;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>books table</h1>
+<pre>CREATE TABLE books(
+   id     int(8) primary key auto_increment,
+   title  varchar(255),
+   author int(8),foreign key (author)
+      references authors(id)
+) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
+   </div>
+
+
+   <div class="slide">
+      <h1>tips</h1>
+      <p>Name link fields as singular</p>
+      <p>Check foreign key is the same field and type and size in both tables</p>
+   </div>
+
+   <div class="slide">
+      <h1>books table</h1>
+<pre>CREATE TABLE books(
+   id     int(8) primary key auto_increment,
+   title  varchar(255),
+   author <strong>int(8)</strong>,<strong>foreign key (<em>author</em>)</strong>
+      <strong>references <em>authors(id)</em></strong>
+) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>CRUD compared</h1>
+      <ul>
+         <li><strong>C</strong> - Create</li>
+         <li><strong>R</strong> - Read</li>
+         <li><strong>U</strong> - Update</li>
+         <li><strong>D</strong> - Delete</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Manual (SQL)</h1>
+   </div>
+
+   <div class="slide">
+      <h1>manual: create</h1>
+<pre>my $sth = $dbh-&gt;prepare('
+   INSERT INTO books
+   (title, author)
+   values (?,?)
+');
+
+$sth-&gt;execute(
+  'A book title', $author_id
+);</pre>
+   </div>
+
+   <div class="slide">
+      <h1>manual: create</h1>
+<pre>my $sth = $dbh-&gt;prepare('
+   <strong>INSERT INTO books
+   (title, author)
+   values (?,?)</strong>
+');
+
+$sth-&gt;execute(
+  'A book title', <strong><em>$author_id</em></strong>
+);</pre>
+   </div>
+
+   <div class="slide">
+      <h1>manual: retrieve</h1>
+<pre>my $sth = $dbh-&gt;prepare('
+   SELECT title,
+   authors.name as author_name
+   FROM books, authors
+   WHERE books.author = authors.id
+');</pre>
+   </div>
+
+   <div class="slide">
+      <h1>manual: retrieve</h1>
+<pre>while( my $book = $sth-&gt;fetchrow_hashref() ) {
+  print 'Author of '
+     . $book-&gt;{title}
+     . ' is '
+     . $book-&gt;{author_name}
+     . "\n";
+}</pre>
+   </div>
+
+   <div class="slide">
+      <h1>manual: update</h1>
+<pre>my $update = $dbh-&gt;prepare('
+   UPDATE books
+   SET title = ?
+   WHERE id = ?
+');
+
+$update-&gt;execute(
+  'New title',<strong>$book_id</strong>
+);</pre>
+   </div>
+
+   <div class="slide">
+      <h1>manual: delete</h1>
+<pre>my $delete = $dbh-&gt;prepare('
+   DELETE FROM books
+   WHERE id = ?
+');
+
+$delete-&gt;execute(<strong>$book_id</strong>);</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIx::Class</h1>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: create</h1>
+<pre>my $book = $book_model-&gt;create({
+   title  =&gt; 'A book title',
+   author =&gt; $author_id,
+});</pre>
+      <p>Look ma, no SQL!</p>
+      <p><strong>Tip:</strong> do not pass in primary_key field, even if it's empty/undef as the object returned will have an empty id, even if your field is auto increment.</p>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: create</h1>
+<pre>my $book = $book_model-&gt;create({
+   title  =&gt; 'A book title',
+   author =&gt; <strong>$author_id</strong>,
+});</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: create</h1>
+<pre>my $pratchett = $author_model-&gt;create({
+   name =&gt; 'Terry Pratchett',
+});</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: create</h1>
+<pre>my $book = $pratchett-&gt;create_related(
+  books =&gt; {
+   title =&gt; 'Another Discworld book',
+});</pre>
+<strong>or</strong>
+<pre>my $book = $pratchett-&gt;add_to_books({
+   title =&gt; 'Another Discworld book',
+});</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: create</h1>
+<pre>my $book = $pratchett-&gt;create_related(
+  <strong>books</strong> =&gt; {
+   title =&gt; 'Another Discworld book',
+});</pre>
+<strong>or</strong>
+<pre>my $book = $pratchett-&gt;add_to_<strong>books</strong>({
+   title =&gt; 'Another Discworld book',
+});</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: retrieve</h1>
+      <p>DBIx::Class - Lots of ways to do the same thing...</p>
+      <p><em>"There is more than one way to do it (TIMTOWTDI, usually pronounced "Tim Toady") is a Perl motto"</em></p>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: retrieve</h1>
+<pre>my $book = $book_model-&gt;find($book_id);
+
+my $book = $book_model-&gt;search({
+   title =&gt; 'A book title',
+})-&gt;single;
+
+my @books = $book_model-&gt;search({
+   author =&gt; $author_id,
+})-&gt;all;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: retrieve</h1>
+<pre>while( my $book = $books_rs-&gt;next() ) {
+ print 'Author of '
+    . $book-&gt;title
+    . ' is '
+    . $book-&gt;author-&gt;name
+    . "\n";
+}</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: retrieve</h1>
+<pre>my $books_rs = $book_model-&gt;search({
+   author =&gt; $author_id,
+});</pre>
+      <p>Search takes SQL::Abstract formatted queries</p>
+      <pre>&gt; perldoc SQL::Abstract</p>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: update</h1>
+<pre>$book-&gt;update({
+  title =&gt; 'New title',
+});</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: delete</h1>
+<pre>$book-&gt;delete;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Creating models</h1>
+   </div>
+
+   <div class="slide">
+      <pre>Example of a DBIC Result</pre>
+   </div>
+
+   <div class="slide">
+      <pre>Example of a DBIC Result</pre>
+   </div>
+
+   <div class="slide">
+      <p>too much typing!  too much maintenance!</p>
+      <p>too much maintenance!</p>
+   </div>
+
+   <div class="slide">
+      <h1>Schema::Loader</h1>
+      <pre>code for S::L here</pre>
+   </div>
+
+   <div class="slide">
+      <h1>splitting logic cleanly</h1>
+      <p>LPW::DBIC::Result::Foo = an individual row</p>
+      <p>LPW::DBIC::ResultSet::Foo = searches / results</p>
+   </div>
+
+   <div class="slide">
+      <h1>using your Schema</h1>
+      <pre>example usage code goes here</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DEBUGGING</h1>
+      <pre>DBIC_TRACE=1 ./your_script.pl</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Schema::Loader</h1>
+<pre>LPW::DBIC::Result::Authors-&gt;table("authors");
+LPW::DBIC::Result::Authors-&gt;add_columns(
+   id =&gt; {
+      data_type     =&gt; "INT",
+      default_value =&gt; undef,
+      is_nullable   =&gt; 0,
+      size          =&gt; 8
+   },
+   title =&gt; {
+      data_type     =&gt; "VARCHAR",
+      default_value =&gt; undef,
+      is_nullable   =&gt; 1,
+      size          =&gt; 255,
+   },
+);
+LPW::DBIC::Result::Authors-&gt;set_primary_key("id");</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Schema::Loader</h1>
+<pre>LPW::DBIC::Result::Books->table("books");
+LPW::DBIC::Result::Books->add_columns(
+   id =&gt; {
+      data_type     =&gt; "INT",
+      default_value =&gt; undef,
+      is_nullable   =&gt; 0,
+      size          =&gt; 8
+   },
+   name =&gt; {
+      data_type     =&gt; "VARCHAR",
+      default_value =&gt; undef,
+      is_nullable   =&gt; 1,
+      size          =&gt; 255,
+   },
+   author =&gt; {
+      data_type     =&gt; "INT",
+      default_value =&gt; undef,
+      is_nullable   =&gt; 1,
+      size          =&gt; 8
+   },
+);
+LPW::DBIC::Result::Books-&gt;set_primary_key("id");</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Schema::Loader</h1>
+<pre>LPW::DBIC::Result::Authors-&gt;has_many(books =&gt; "LPW::DBIC::Books",
+   { "foreign.author" =&gt; "self.id" });
+
+LPW::DBIC::Result::Books-&gt;belongs_to(author =&gt; "LPW::DBIC::Authors",
+   { id =&gt; "author" });</pre>
+   </div>
+
+   <div class="slide">
+      <h1>SQL - debugging</h1>
+<pre>INSERT INTO authors (name)
+   VALUES (?): 'Douglas Adams'
+
+INSERT INTO books (author, title)
+   VALUES (?, ?): '5', '42'</pre>
+   </div>
+
+   <div class="slide">
+      <h1>overloading</h1>
+<pre>LPW::DBIC::Result::Books
+LPW::DBIC::ResultSet::Books
+LPW::DBIC::Result::Authors
+LPW::DBIC::ResultSet::Books</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Result::</h1>
+<pre>package LPW::DBIC::Result::Books;
+use base 'DBIx::Class';
+use strict;
+use warnings;
+
+sub isbn {
+   my $self = shift;
+
+   # search amazon or something
+   my $api = Amazon::API-&gt;book({
+      title =&gt; $self-&gt;title
+   });
+
+   return $api-&gt;isbn;
+}
+
+1;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Result::</h1>
+<pre>print $book-&gt;isbn;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Result:: (inflating)</h1>
+<pre>package LPW::DBIC::Result::Books;
+use base 'DBIx::Class';
+use strict;
+use warnings;
+
+use DateTime::Format::MySQL;
+
+__PACKAGE__-&gt;<strong>inflate_column</strong>(
+   <strong>date_published</strong> =&gt; {
+      inflate =&gt; sub { DateTime::Format::MySQL-&gt;parse_date(shift) },
+      deflate =&gt; sub { shift-&gt;ymd},
+   }
+);
+# Automatic see: DBIx::Class::InflateColumn::DateTime</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Result:: (inflating)</h1>
+<pre>package LPW::DBIC::Result::Books;
+use base 'DBIx::Class';
+use strict;
+use warnings;
+
+use DateTime::Format::MySQL;
+
+__PACKAGE__-&gt;inflate_column(
+   date_published =&gt; {
+      <strong>inflate =&gt; sub { DateTime::Format::MySQL-&gt;parse_date(shift) },
+      deflate =&gt; sub { shift-&gt;ymd},</strong>
+   }
+);
+# Automatic see: DBIx::Class::InflateColumn::DateTime
+# Automatic see: DBIx::Class::InflateColumn::DateTime
+# Automatic see: DBIx::Class::InflateColumn::DateTime</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Result:: (deflating)</h1>
+<pre>$book-&gt;date_published(DateTime-&gt;now);
+$book-&gt;update;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Result:: (inflating)</h1>
+<pre>my $date_published = $book-&gt;date_published;
+print $date_published-&gt;month_abbr;</pre>
+
+<strong><em>Nov</em></strong>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSets::</h1>
+<pre>package LPW::DBIC::ResultSet::Books;
+use base 'DBIx::Class::ResultSet';
+sub the_ultimate_books {
+   my $self = shift;
+   return $self-&gt;search({ title =&gt; { -like =&gt; '%42%' } });
+}
+sub by_author {
+   my ( $self, $author ) = @_;
+   return $self-&gt;search({ author =&gt; $author-&gt;id })
+}
+
+1;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSets::</h1>
+<pre>package LPW::DBIC::<strong>ResultSet::Books</strong>;
+use base '<strong>DBIx::Class::ResultSet</strong>';
+sub the_ultimate_books {
+   my $self = shift;
+   <strong>return $self-&gt;search({ title =&gt; { -like =&gt; '%42%' } })</strong>
+}
+sub by_author {
+   my ( $self, $author ) = @_;
+   return $self-&gt;search({ author =&gt; $author-&gt;id })
+}
+
+1;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSets::</h1>
+<pre>package LPW::DBIC::ResultSet::Books;
+use base 'DBIx::Class::ResultSet';
+sub the_ultimate_books {
+   my $self = shift;
+   return $self-&gt;search({ title =&gt; { -like =&gt; '%42%' } });
+}
+sub by_author {
+   my ( $self, $author ) = @_;
+   <strong>return $self-&gt;search({ author =&gt; $author-&gt;id })</strong>
+}
+
+1;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSets::</h1>
+<pre>use LPW::DBIC;
+my $book_model = LPW::DBIC-&gt;resultset('Books');
+my $book_rs    = $book_model-&gt;the_ultimate_books;
+my @books      = $book_rs-&gt;all;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSets::chaining</h1>
+<pre>use LPW::DBIC;
+my $book_model   = LPW::DBIC-&gt;resultset('Books');
+my $author_model = LPW::DBIC-&gt;resultset('Authors');
+my $author       = $author_model-&gt;search({ name =&gt; 'Douglas Adams' })-&gt;single;
+my $book_rs      = $book_model-&gt;the_ultimate_books-&gt;by_author($author);
+my @books        = $book_rs-&gt;all;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSets::chaining</h1>
+<pre>my $book_rs = $book_model
+  -&gt;the_ultimate_books
+  -&gt;by_author($author);</pre>
+or
+
+<pre>my $book_rs = $book_model
+  -&gt;the_ultimate_books();
+$book_rs = $book_rs-&gt;by_author($author);</pre>
+<pre># Debug (SQL):
+
+# SELECT me.id, me.title, me.date_published, me.author
+#   FROM books me
+#   WHERE ( ( ( author = ? ) AND ( title LIKE ? ) ) ): '5', '%42%'
+#   WHERE ( ( ( author = ? ) AND ( title LIKE ? ) ) ): '5', '%42%'</pre>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSets::chaining</h1>
+<pre>my $rs = $book_model
+  -&gt;category('childrens')
+  -&gt;by_author($author)
+  -&gt;published_after('1812')
+  -&gt;first_page_contains('once upon')
+  -&gt;rating_greater_than(4);
+
+my @books = $rs-&gt;all;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>overloading before new record</h1>
+   </div>
+
+   <div class="slide">
+      <h1>overloading before new record</h1>
+      <pre>package LPW::DBIC::Result::Authors;
+use base 'DBIx::Class';
+
+sub new {
+   my ( $class, $attrs ) = @_;
+   # Mess with $attrs
+   my $new = $class-&gt;next::method($attrs);
+   return $new
+}
+
+1;</pre>
+
+   <div class="slide">
+      <h1>relationships</h1>
+   </div>
+
+   <div class="slide">
+      <h1>multiple authors</h1>
+   </div>
+
+   <div class="slide">
+      <h1>a few relationships</h1>
+      (authors -- author_link_to_book -- books)
+   </div>
+
+   <div class="slide">
+      <h1>a few relationships</h1>
+      !
+   </div>
+
+   <div class="slide">
+      <h1>new join table</h1>
+<pre>CREATE TABLE author_and_books(
+  id      int(8)    primary key auto_increment,
+  book    int(8),
+  author  int(8),
+  foreign key (book)     references books(id),
+  foreign key (author)   references authors(id)
+) engine = InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `books` DROP `author`</pre>
+   </div>
+
+   <div class="slide">
+      <h1>new join table</h1>
+<pre>CREATE TABLE author_and_books(
+  id      int(8)    primary key auto_increment,
+  book    int(8),
+  author  int(8),
+  <strong>foreign key (book)     references books(id),
+  foreign key (author)   references authors(id)</strong>
+) engine = InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `books` DROP `author`</pre>
+   </div>
+
+   <div class="slide">
+      <h1>has_many</h1>
+   </div>
+
+   <div class="slide">
+      <h1>has_many</h1>
+<pre>package LPW::DBIC::<strong>Result::Books</strong>;
+
+__PACKAGE__-&gt;has_many( author_and_books =&gt; "LPW::DBIC::Result::AuthorAndBooks",
+    { "foreign.book" =&gt; "self.id" },
+);
+
+<strong># This is auto generated by Schema::Loader</strong></pre>
+   </div>
+
+   <div class="slide">
+      <h1>has_many</h1>
+<pre>package LPW::DBIC::<strong>Result::Books</strong>;
+
+__PACKAGE__-&gt;has_many(
+author_and_books =&gt; <strong># name of accessor</strong>
+"LPW::DBIC::Result::AuthorAndBooks", <strong># related class</strong>
+    { "foreign.book" =&gt; "self.id" } <strong># Relationship (magic often works if not
+                                        # specified, but avoid!)</strong>
+);
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>belongs_to</h1>
+   </div>
+
+   <div class="slide">
+      <h1>belongs_to</h1>
+<pre>package LPW::DBIC::<strong>Result::AuthorAndBooks</strong>;
+
+__PACKAGE__-&gt;belongs_to(
+   book =&gt; <strong># Accessor name</strong>
+   "LPW::DBIC::Result::Books", <strong># Related class</strong>
+   { id =&gt; "book" } <strong># relationship</strong>
+);
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>same for Authors</h1>
+   </div>
+
+   <div class="slide">
+      <h1>with no coding...</h1>
+   </div>
+
+   <div class="slide">
+      <h1>many_to_many</h1>
+   </div>
+
+   <div class="slide">
+      <h1>many_to_many</h1>
+      <pre>package LPW::DBIC::<strong>Result::Books</strong>;
+use base 'DBIx::Class';
+
+__PACKAGE__-&gt;many_to_many(
+   authors =&gt; "author_and_books", 'author'
+);
+
+1;
+
+<strong> # This is <em>NOT</em> auto generated by Schema::Loader </strong></pre>
+   </div>
+
+   <div class="slide">
+      <h1>many_to_many</h1>
+      <pre>package LPW::DBIC::<strong>Result::Books</strong>;
+use base 'DBIx::Class';
+
+__PACKAGE__-&gt;many_to_many(
+   authors <strong># Accessor name</strong>
+   =&gt; "author_and_books", <strong># has_many</strong>
+   'author' <strong># foreign relationship name</strong>
+);
+
+1;</pre>
+   </div>
+
+   <div class="slide">
+      <h1>many_to_many</h1>
+      <pre>package LPW::DBIC::Result::Authors;
+use base 'DBIx::Class';
+
+__PACKAGE__-&gt;many_to_many(
+   "books" <strong># Accessor Name</strong>
+   =&gt; "author_and_books", <strong># has_many accessor_name</strong>
+   'book' <strong># foreign relationship name</strong>
+);
+
+1;
+
+<strong># This is <em>NOT</em> auto generated by Schema::Loader</strong></pre>
+   </div>
+
+   <div class="slide">
+      <h1>using many_to_many</h1>
+      <pre>#!/usr/bin/perl
+
+use LPW::DBIC;
+
+my $author_model = LPW::DBIC-&gt;resultset('Authors');
+my $author       = $author_model-&gt;search({
+   name =&gt; 'Douglas Adams',
+})-&gt;single;
+$author-&gt;add_to_books({
+   title =&gt; 'A new book',
+});</pre>
+   </div>
+
+   <div class="slide">
+      <h1>using many_to_many</h1>
+      <pre>my $author = $author_model-&gt;search({
+   name =&gt; 'Douglas Adams',
+})-&gt;single;
+<strong>$author-&gt;add_to_books({
+   title =&gt; 'A new book',
+});</strong>
+
+# SELECT me.id, me.name FROM authors me
+#     WHERE ( name = ? ): 'Douglas Adams';
+# INSERT INTO books (title) VALUES (?): 'A new book';
+# INSERT INTO author_and_books (author, book)
+#     VALUES (?, ?): '5', '2';</pre>
+   </div>
+
+   <div class="slide">
+      <h1>using many_to_many</h1>
+      <pre>$author-&gt;add_to_books($book);
+
+$book-&gt;add_to_authors($author_1);
+$book-&gt;add_to_authors($author_2);</pre>
+   </div>
+
+   <div class="slide">
+      <h1>in 16 lines of code</h1>
+   </div>
+
+   <div class="slide">
+      <h1>errors</h1>
+      <p>Read them closely!</p>
+   </div>
+
+   <div class="slide">
+      <h1>error messages</h1>
+      <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'LPW::DBIC::Result::Authors': Can't locate object method "many_to_many" via package "LPW::DBIC::Result::Author" at lib/LPW/DBIC/Result/Authors.pm line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
+   </div>
+
+   <div class="slide">
+      <h1>error messages</h1>
+   <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'LPW::DBIC::Result::Authors': Can't locate object method "many_to_many" via package "LPW::DBIC::<strong>Result::Author</strong>" at lib/LPW/DBIC/<strong>Result/Authors.pm</strong> line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
+   </div>
+
+   <div class="slide">
+      <h1>errors</h1>
+      <ul>
+         <li>Turn on debugging</li>
+         <li>Read error messages (sometimes useful!)</li>
+         <li>Check field names</li>
+         <li>Check package names</li>
+         <li>Check which database you are connected to (dev/test/live?) - repeat above</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>bonus slides!</h1>
+   </div>
+
+   <div class="slide">
+      <h1>Template Toolkit</h1>
+      <ul>
+         <li><pre>[% author.books.count %]</pre> not working?</li>
+         <li>TT all methods are called in list context</li>
+         <li><pre>[% author.books<strong>_rs</strong>.count %]</pre> scalar context</li>
+         <li><em>Available for all relationships</em></li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Catalyst</h1>
+      <pre>package Your::App::Model::<strong>LPW</strong>;
+use base qw(<strong>Catalyst::Model::DBIC::Schema</strong>);
+
+use strict;
+use warnings;
+
+__PACKAGE__-&gt;config(
+  schema_class =&gt; '<strong>LPW::DBIC</strong>',
+);
+
+1;</pre>
+   <p>Keep your Schema in a <em>separate</em> package to your Catalyst application</p>
+   </div>
+
+   <div class="slide">
+      <h1>Catalyst</h1>
+<pre>sub action_name : Local {
+  my ($self, $c) = @_;
+
+  my $model = $c-&gt;model('DBIC::LPW');
+  my $author_model = $model-&gt;resultset('Authors');
+
+}
+
+1;</pre>
+   </div>
+
+</div>
+</body>
+</html>
