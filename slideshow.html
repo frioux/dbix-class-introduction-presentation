@@ -71,15 +71,37 @@
    <div class="slide">
       <h1>DBIX::Class (aka DBIC)</h1>
       <h3>for (advanced) beginners</h3>
-      <h4>Leo Lapworth @ LPW 2009</h4>
-      <h4><a href="http://leo.cuckoo.org/projects">http://leo.cuckoo.org/projects</a></h4>
-      <div class="handout"></div>
+   </div>
+
+   <div class="slide">
+      <h1>Authors</h1>
+      <h4>Originally Leo Lapworth @ LPW 2009</h4>
+      <h4>Matthew S. Trout</h4>
+      <h4>Arthur Axel "fREW" Schmidt</h4>
+      <h4>Justin D. Hunter</h4>
    </div>
 
    <div class="slide">
       <h1>assumptions</h1>
       <p>You know a little about Perl and using objects</p>
       <p>You know a little bit about databases and using foreign keys</p>
+      <div class="notes">
+         <ul>
+            <li>How many people have designed a database with Foreign Keys?</li>
+            <li>How many people have used any ORM?<ul>
+               <li>In Perl?<ul>
+                  <li>DBIC?</li>
+                  <li> Class::DBI? </li>
+                  <li> Rose::DB?  </li>
+                  <li> Fey?  </li>
+                  <li> Others?  </li>
+               </ul></li>
+               <li>AR? </li>
+               <li> DataMapper?  </li>
+               <li>(N)Hibernate?</li>
+            </ul></li>
+         </ul>
+      </div>
    </div>
 
    <div class="slide">
@@ -381,8 +403,8 @@ my @books = $book_model-&gt;search({
 
    <div class="slide">
       <h1>splitting logic cleanly</h1>
-      <p>LPW::DBIC::Result::Foo = an individual row</p>
-      <p>LPW::DBIC::ResultSet::Foo = searches / results</p>
+      <p>Foo::DBIC::Result::Foo = an individual row</p>
+      <p>Foo::DBIC::ResultSet::Foo = searches / results</p>
    </div>
 
    <div class="slide">
@@ -397,8 +419,8 @@ my @books = $book_model-&gt;search({
 
    <div class="slide">
       <h1>Schema::Loader</h1>
-<pre>LPW::DBIC::Result::Authors-&gt;table("authors");
-LPW::DBIC::Result::Authors-&gt;add_columns(
+<pre>Foo::DBIC::Result::Authors-&gt;table("authors");
+Foo::DBIC::Result::Authors-&gt;add_columns(
    id =&gt; {
       data_type     =&gt; "INT",
       default_value =&gt; undef,
@@ -412,13 +434,13 @@ LPW::DBIC::Result::Authors-&gt;add_columns(
       size          =&gt; 255,
    },
 );
-LPW::DBIC::Result::Authors-&gt;set_primary_key("id");</pre>
+Foo::DBIC::Result::Authors-&gt;set_primary_key("id");</pre>
    </div>
 
    <div class="slide">
       <h1>Schema::Loader</h1>
-<pre>LPW::DBIC::Result::Books->table("books");
-LPW::DBIC::Result::Books->add_columns(
+<pre>Foo::DBIC::Result::Books->table("books");
+Foo::DBIC::Result::Books->add_columns(
    id =&gt; {
       data_type     =&gt; "INT",
       default_value =&gt; undef,
@@ -438,15 +460,15 @@ LPW::DBIC::Result::Books->add_columns(
       size          =&gt; 8
    },
 );
-LPW::DBIC::Result::Books-&gt;set_primary_key("id");</pre>
+Foo::DBIC::Result::Books-&gt;set_primary_key("id");</pre>
    </div>
 
    <div class="slide">
       <h1>Schema::Loader</h1>
-<pre>LPW::DBIC::Result::Authors-&gt;has_many(books =&gt; "LPW::DBIC::Books",
+<pre>Foo::DBIC::Result::Authors-&gt;has_many(books =&gt; "Foo::DBIC::Books",
    { "foreign.author" =&gt; "self.id" });
 
-LPW::DBIC::Result::Books-&gt;belongs_to(author =&gt; "LPW::DBIC::Authors",
+Foo::DBIC::Result::Books-&gt;belongs_to(author =&gt; "Foo::DBIC::Authors",
    { id =&gt; "author" });</pre>
    </div>
 
@@ -461,15 +483,15 @@ INSERT INTO books (author, title)
 
    <div class="slide">
       <h1>overloading</h1>
-<pre>LPW::DBIC::Result::Books
-LPW::DBIC::ResultSet::Books
-LPW::DBIC::Result::Authors
-LPW::DBIC::ResultSet::Books</pre>
+<pre>Foo::DBIC::Result::Books
+Foo::DBIC::ResultSet::Books
+Foo::DBIC::Result::Authors
+Foo::DBIC::ResultSet::Books</pre>
    </div>
 
    <div class="slide">
       <h1>Result::</h1>
-<pre>package LPW::DBIC::Result::Books;
+<pre>package Foo::DBIC::Result::Books;
 use base 'DBIx::Class';
 use strict;
 use warnings;
@@ -495,7 +517,7 @@ sub isbn {
 
    <div class="slide">
       <h1>Result:: (inflating)</h1>
-<pre>package LPW::DBIC::Result::Books;
+<pre>package Foo::DBIC::Result::Books;
 use base 'DBIx::Class';
 use strict;
 use warnings;
@@ -513,7 +535,7 @@ __PACKAGE__-&gt;<strong>inflate_column</strong>(
 
    <div class="slide">
       <h1>Result:: (inflating)</h1>
-<pre>package LPW::DBIC::Result::Books;
+<pre>package Foo::DBIC::Result::Books;
 use base 'DBIx::Class';
 use strict;
 use warnings;
@@ -547,7 +569,7 @@ print $date_published-&gt;month_abbr;</pre>
 
    <div class="slide">
       <h1>ResultSets::</h1>
-<pre>package LPW::DBIC::ResultSet::Books;
+<pre>package Foo::DBIC::ResultSet::Books;
 use base 'DBIx::Class::ResultSet';
 sub the_ultimate_books {
    my $self = shift;
@@ -563,7 +585,7 @@ sub by_author {
 
    <div class="slide">
       <h1>ResultSets::</h1>
-<pre>package LPW::DBIC::<strong>ResultSet::Books</strong>;
+<pre>package Foo::DBIC::<strong>ResultSet::Books</strong>;
 use base '<strong>DBIx::Class::ResultSet</strong>';
 sub the_ultimate_books {
    my $self = shift;
@@ -579,7 +601,7 @@ sub by_author {
 
    <div class="slide">
       <h1>ResultSets::</h1>
-<pre>package LPW::DBIC::ResultSet::Books;
+<pre>package Foo::DBIC::ResultSet::Books;
 use base 'DBIx::Class::ResultSet';
 sub the_ultimate_books {
    my $self = shift;
@@ -595,17 +617,17 @@ sub by_author {
 
    <div class="slide">
       <h1>ResultSets::</h1>
-<pre>use LPW::DBIC;
-my $book_model = LPW::DBIC-&gt;resultset('Books');
+<pre>use Foo::DBIC;
+my $book_model = Foo::DBIC-&gt;resultset('Books');
 my $book_rs    = $book_model-&gt;the_ultimate_books;
 my @books      = $book_rs-&gt;all;</pre>
    </div>
 
    <div class="slide">
       <h1>ResultSets::chaining</h1>
-<pre>use LPW::DBIC;
-my $book_model   = LPW::DBIC-&gt;resultset('Books');
-my $author_model = LPW::DBIC-&gt;resultset('Authors');
+<pre>use Foo::DBIC;
+my $book_model   = Foo::DBIC-&gt;resultset('Books');
+my $author_model = Foo::DBIC-&gt;resultset('Authors');
 my $author       = $author_model-&gt;search({ name =&gt; 'Douglas Adams' })-&gt;single;
 my $book_rs      = $book_model-&gt;the_ultimate_books-&gt;by_author($author);
 my @books        = $book_rs-&gt;all;</pre>
@@ -647,7 +669,7 @@ my @books = $rs-&gt;all;</pre>
 
    <div class="slide">
       <h1>overloading before new record</h1>
-      <pre>package LPW::DBIC::Result::Authors;
+      <pre>package Foo::DBIC::Result::Authors;
 use base 'DBIx::Class';
 
 sub new {
@@ -709,9 +731,9 @@ ALTER TABLE `books` DROP `author`</pre>
 
    <div class="slide">
       <h1>has_many</h1>
-<pre>package LPW::DBIC::<strong>Result::Books</strong>;
+<pre>package Foo::DBIC::<strong>Result::Books</strong>;
 
-__PACKAGE__-&gt;has_many( author_and_books =&gt; "LPW::DBIC::Result::AuthorAndBooks",
+__PACKAGE__-&gt;has_many( author_and_books =&gt; "Foo::DBIC::Result::AuthorAndBooks",
     { "foreign.book" =&gt; "self.id" },
 );
 
@@ -720,11 +742,11 @@ __PACKAGE__-&gt;has_many( author_and_books =&gt; "LPW::DBIC::Result::AuthorAndBo
 
    <div class="slide">
       <h1>has_many</h1>
-<pre>package LPW::DBIC::<strong>Result::Books</strong>;
+<pre>package Foo::DBIC::<strong>Result::Books</strong>;
 
 __PACKAGE__-&gt;has_many(
 author_and_books =&gt; <strong># name of accessor</strong>
-"LPW::DBIC::Result::AuthorAndBooks", <strong># related class</strong>
+"Foo::DBIC::Result::AuthorAndBooks", <strong># related class</strong>
     { "foreign.book" =&gt; "self.id" } <strong># Relationship (magic often works if not
                                         # specified, but avoid!)</strong>
 );
@@ -737,11 +759,11 @@ author_and_books =&gt; <strong># name of accessor</strong>
 
    <div class="slide">
       <h1>belongs_to</h1>
-<pre>package LPW::DBIC::<strong>Result::AuthorAndBooks</strong>;
+<pre>package Foo::DBIC::<strong>Result::AuthorAndBooks</strong>;
 
 __PACKAGE__-&gt;belongs_to(
    book =&gt; <strong># Accessor name</strong>
-   "LPW::DBIC::Result::Books", <strong># Related class</strong>
+   "Foo::DBIC::Result::Books", <strong># Related class</strong>
    { id =&gt; "book" } <strong># relationship</strong>
 );
 </pre>
@@ -761,7 +783,7 @@ __PACKAGE__-&gt;belongs_to(
 
    <div class="slide">
       <h1>many_to_many</h1>
-      <pre>package LPW::DBIC::<strong>Result::Books</strong>;
+      <pre>package Foo::DBIC::<strong>Result::Books</strong>;
 use base 'DBIx::Class';
 
 __PACKAGE__-&gt;many_to_many(
@@ -775,7 +797,7 @@ __PACKAGE__-&gt;many_to_many(
 
    <div class="slide">
       <h1>many_to_many</h1>
-      <pre>package LPW::DBIC::<strong>Result::Books</strong>;
+      <pre>package Foo::DBIC::<strong>Result::Books</strong>;
 use base 'DBIx::Class';
 
 __PACKAGE__-&gt;many_to_many(
@@ -789,7 +811,7 @@ __PACKAGE__-&gt;many_to_many(
 
    <div class="slide">
       <h1>many_to_many</h1>
-      <pre>package LPW::DBIC::Result::Authors;
+      <pre>package Foo::DBIC::Result::Authors;
 use base 'DBIx::Class';
 
 __PACKAGE__-&gt;many_to_many(
@@ -807,9 +829,9 @@ __PACKAGE__-&gt;many_to_many(
       <h1>using many_to_many</h1>
       <pre>#!/usr/bin/perl
 
-use LPW::DBIC;
+use Foo::DBIC;
 
-my $author_model = LPW::DBIC-&gt;resultset('Authors');
+my $author_model = Foo::DBIC-&gt;resultset('Authors');
 my $author       = $author_model-&gt;search({
    name =&gt; 'Douglas Adams',
 })-&gt;single;
@@ -853,12 +875,12 @@ $book-&gt;add_to_authors($author_2);</pre>
 
    <div class="slide">
       <h1>error messages</h1>
-      <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'LPW::DBIC::Result::Authors': Can't locate object method "many_to_many" via package "LPW::DBIC::Result::Author" at lib/LPW/DBIC/Result/Authors.pm line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
+      <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'Foo::DBIC::Result::Authors': Can't locate object method "many_to_many" via package "Foo::DBIC::Result::Author" at lib/Foo/DBIC/Result/Authors.pm line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
    </div>
 
    <div class="slide">
       <h1>error messages</h1>
-   <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'LPW::DBIC::Result::Authors': Can't locate object method "many_to_many" via package "LPW::DBIC::<strong>Result::Author</strong>" at lib/LPW/DBIC/<strong>Result/Authors.pm</strong> line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
+   <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'Foo::DBIC::Result::Authors': Can't locate object method "many_to_many" via package "Foo::DBIC::<strong>Result::Author</strong>" at lib/Foo/DBIC/<strong>Result/Authors.pm</strong> line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
    </div>
 
    <div class="slide">
@@ -888,14 +910,14 @@ $book-&gt;add_to_authors($author_2);</pre>
 
    <div class="slide">
       <h1>Catalyst</h1>
-      <pre>package Your::App::Model::<strong>LPW</strong>;
+      <pre>package Your::App::Model::<strong>Foo</strong>;
 use base qw(<strong>Catalyst::Model::DBIC::Schema</strong>);
 
 use strict;
 use warnings;
 
 __PACKAGE__-&gt;config(
-  schema_class =&gt; '<strong>LPW::DBIC</strong>',
+  schema_class =&gt; '<strong>Foo::DBIC</strong>',
 );
 
 1;</pre>
@@ -907,7 +929,7 @@ __PACKAGE__-&gt;config(
 <pre>sub action_name : Local {
   my ($self, $c) = @_;
 
-  my $model = $c-&gt;model('DBIC::LPW');
+  my $model = $c-&gt;model('DBIC::Foo');
   my $author_model = $model-&gt;resultset('Authors');
 
 }
