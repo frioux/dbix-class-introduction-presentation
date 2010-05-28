@@ -702,13 +702,12 @@ __PACKAGE__-&gt;many_to_many(
    </div>
 
    <div class="slide">
-      <h1>using many_to_many</h1>
-      <pre>#!/usr/bin/perl
-
+      <h1>Using many_to_many</h1>
+      <pre>#!perl
 use Foo::Schema;
-
-my $author_model = Foo::Schema-&gt;resultset('Authors');
-my $author       = $author_model-&gt;search({
+my $schema    = Foo::Schema-&gt;connect(...);
+my $author_rs = $schema-&gt;resultset('Authors');
+my $author    = $author_model-&gt;search({
    name =&gt; 'Douglas Adams',
 })-&gt;single;
 $author-&gt;add_to_books({
