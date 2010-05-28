@@ -342,7 +342,7 @@ my @books = $book_model-&gt;search({
    </div>
 
    <div class="slide">
-<pre>package MyApp::Schema::Result::Author;
+<pre>package Foo::Schema::Result::Author;
 use strict; use warnings;
 __PACKAGE__-&gt;table('authors');
 __PACKAGE__-&gt;add_columns(
@@ -358,14 +358,14 @@ __PACKAGE__-&gt;add_columns(
 );
 __PACKAGE__-&gt;set_primary_key('id');
 __PACKAGE__-&gt;has_many( books =&gt;
-   'MyApp::Schema::Result::Book', 'author_id'
+   'Foo::Schema::Result::Book', 'author_id'
 );
 1;
 </pre>
    </div>
 
    <div class="slide">
-<pre>package MyApp::Schema::Result::Book;
+<pre>package Foo::Schema::Result::Book;
 use strict; use warnings;
 __PACKAGE__-&gt;table('books');
 __PACKAGE__-&gt;add_columns(
@@ -386,7 +386,7 @@ __PACKAGE__-&gt;add_columns(
 );
 __PACKAGE__-&gt;set_primary_key('id');
 __PACKAGE__-&gt;belongs_to( author =&gt;
-   'MyApp::Schema::Result::Author', 'author_id'
+   'Foo::Schema::Result::Author', 'author_id'
 );
 1;
 </pre>
@@ -395,7 +395,7 @@ __PACKAGE__-&gt;belongs_to( author =&gt;
    <div class="slide">
       <h1>Schema::Loader</h1>
       <p>DB -&gt; Perl vs Perl -&gt; DB</p>
-<pre>package MyApp::Schema;
+<pre>package Foo::Schema;
 use strict; use warnings;
 use base 'DBIx::Class::Schema::Loader';
 __PACKAGE__-&gt;loader_options({
@@ -406,14 +406,14 @@ __PACKAGE__-&gt;loader_options({
 
 # elsewhere...
 
-my $schema = MyApp::Schema-&gt;connect($dsn, $user, $pass);
+my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
 </pre>
    </div>
 
    <div class="slide">
       <h1>Splitting Logic Cleanly</h1>
-      <p>MyApp::Schema::Result::Foo = individual row</p>
-      <p>MyApp::Schema::ResultSet::Foo = searches / table </p>
+      <p>Foo::Schema::Result::Bar = individual row</p>
+      <p>Foo::Schema::ResultSet::Bar = searches / table </p>
    </div>
 
    <div class="slide">
@@ -421,8 +421,8 @@ my $schema = MyApp::Schema-&gt;connect($dsn, $user, $pass);
 <pre>#!perl
 use strict; use warnings;
 use lib 'lib';
-use MyApp::Schema;
-my $schema = MyApp::Schema-&gt;connect($dns, $user, $pass);
+use Foo::Schema;
+my $schema = Foo::Schema-&gt;connect($dns, $user, $pass);
 my $author_rs = $schema-&gt;resultset('Author');
 my $author    = $author_rs-&gt;create({
    name =&gt; 'Douglas Adams',
@@ -449,10 +449,10 @@ INSERT INTO books (author, title)
 
    <div class="slide">
       <h1>overloading</h1>
-<pre>MyApp::Schema::Result::Book
-MyApp::Schema::ResultSet::Book
-MyApp::Schema::Result::Author
-MyApp::Schema::ResultSet::Book</pre>
+<pre>Foo::Schema::Result::Book
+Foo::Schema::ResultSet::Book
+Foo::Schema::Result::Author
+Foo::Schema::ResultSet::Book</pre>
    </div>
 
    <div class="slide">
@@ -490,34 +490,17 @@ use base 'DBIx::Class';
 use strict;
 use warnings;
 
+# Result code here
+
+__PACKAGE__-&gt;load_components('InflateColumn');
 use DateTime::Format::MySQL;
 
 __PACKAGE__-&gt;<strong>inflate_column</strong>(
    <strong>date_published</strong> =&gt; {
       inflate =&gt; sub { DateTime::Format::MySQL-&gt;parse_date(shift) },
       deflate =&gt; sub { shift-&gt;ymd},
-   }
+   },
 );
-# Automatic see: DBIx::Class::InflateColumn::DateTime</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Result:: (inflating)</h1>
-<pre>package Foo::Schema::Result::Books;
-use base 'DBIx::Class';
-use strict;
-use warnings;
-
-use DateTime::Format::MySQL;
-
-__PACKAGE__-&gt;inflate_column(
-   date_published =&gt; {
-      <strong>inflate =&gt; sub { DateTime::Format::MySQL-&gt;parse_date(shift) },
-      deflate =&gt; sub { shift-&gt;ymd},</strong>
-   }
-);
-# Automatic see: DBIx::Class::InflateColumn::DateTime
-# Automatic see: DBIx::Class::InflateColumn::DateTime
 # Automatic see: DBIx::Class::InflateColumn::DateTime</pre>
    </div>
 
@@ -553,62 +536,31 @@ sub by_author {
 
    <div class="slide">
       <h1>ResultSets::</h1>
-<pre>package Foo::Schema::<strong>ResultSet::Books</strong>;
-use base '<strong>DBIx::Class::ResultSet</strong>';
-sub the_ultimate_books {
-   my $self = shift;
-   <strong>return $self-&gt;search({ title =&gt; { -like =&gt; '%42%' } })</strong>
-}
-sub by_author {
-   my ( $self, $author ) = @_;
-   return $self-&gt;search({ author =&gt; $author-&gt;id })
-}
-
-1;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>ResultSets::</h1>
-<pre>package Foo::Schema::ResultSet::Books;
-use base 'DBIx::Class::ResultSet';
-sub the_ultimate_books {
-   my $self = shift;
-   return $self-&gt;search({ title =&gt; { -like =&gt; '%42%' } });
-}
-sub by_author {
-   my ( $self, $author ) = @_;
-   <strong>return $self-&gt;search({ author =&gt; $author-&gt;id })</strong>
-}
-
-1;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>ResultSets::</h1>
 <pre>use Foo::Schema;
-my $book_model = Foo::Schema-&gt;resultset('Books');
-my $book_rs    = $book_model-&gt;the_ultimate_books;
-my @books      = $book_rs-&gt;all;</pre>
+my $schema = Foo::Schema-&gt;connect(...);
+my $book_rs     = Foo::Schema-&gt;resultset('Book');
+my $book_search = $book_rs-&gt;the_ultimate_books;
+my @books       = $book_search-&gt;all;</pre>
    </div>
 
    <div class="slide">
-      <h1>ResultSets::chaining</h1>
-<pre>use Foo::Schema;
-my $book_model   = Foo::Schema-&gt;resultset('Books');
-my $author_model = Foo::Schema-&gt;resultset('Authors');
+      <h1>ResultSets: Chaining</h1>
+<pre>
+my $book_rs      = $schema-&gt;resultset('Book');
+my $author_rs    = $schema-&gt;resultset('Author');
 my $author       = $author_model-&gt;search({ name =&gt; 'Douglas Adams' })-&gt;single;
 my $book_rs      = $book_model-&gt;the_ultimate_books-&gt;by_author($author);
 my @books        = $book_rs-&gt;all;</pre>
    </div>
 
    <div class="slide">
-      <h1>ResultSets::chaining</h1>
-<pre>my $book_rs = $book_model
+      <h1>ResultSets: Chaining</h1>
+<pre>$book_rs = $schema-&gt;resultset('Book')
   -&gt;the_ultimate_books
   -&gt;by_author($author);</pre>
 or
 
-<pre>my $book_rs = $book_model
+<pre>my $book_rs = $schema-&gt;resultset('Book')
   -&gt;the_ultimate_books();
 $book_rs = $book_rs-&gt;by_author($author);</pre>
 <pre># Debug (SQL):
