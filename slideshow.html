@@ -77,8 +77,8 @@
       <h1>Authors</h1>
       <h4>Originally Leo Lapworth @ LPW 2009</h4>
       <h4>Matthew S. Trout</h4>
-      <h4>Arthur Axel "fREW" Schmidt</h4>
       <h4>Justin D. Hunter</h4>
+      <h4>Arthur Axel "fREW" Schmidt</h4>
    </div>
 
    <div class="slide">
@@ -115,30 +115,23 @@
    </div>
 
    <div class="slide">
-      <h1>why this talk?</h1>
-      <ul>
-         <li>Help avoid mistakes I made!</li>
-         <li>Help learn DBIx::Class faster</li>
-         <li>Make your coding easier</li>
-      </ul>
-   </div>
-
-   <div class="slide">
       <h1>point of note</h1>
-      <p><em>"Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it." - Brian W. Kernighan</em></p>
-      <p>This talk is about making it easy so we are less likely to get confused</p>
+      <p><em>"Debugging is twice as hard as writing the code in the first
+      place. Therefore, if you write the code as cleverly as possible,
+      you are, by definition, not smart enough to debug it." - Brian
+      W. Kernighan</em></p>
+
+      <p>This talk is about making it easy so we are less likely to get
+      confused</p>
    </div>
 
    <div class="slide">
-      <h1>table setup</h1>
-   </div>
-
-   <div class="slide">
-      <h1>example...</h1>
+      <h1>Examples Table Setup</h1>
       <ul>
          <li>Authors</li>
          <li>Books</li>
       </ul>
+      <em>MySQL not recommended</em>
    </div>
 
    <div class="slide">
@@ -152,7 +145,6 @@
    <div class="slide">
       <h1>tips</h1>
       <p>Name tables as simple plurals (<strong>add an S</strong>) - makes relationships easier to understand</p>
-      <p>(issue: Matt Trout "Tables should not be plural as gives you plurals for Result:: package names which represent a single row" - talk may be rewritten in future to reflect this as this is better once you understand the relationship setup - either way, consistency is important)</p>
       <p>Use a character set (<strong>UTF8</strong>) from the start (for international characters)</p>
    </div>
 
@@ -167,9 +159,9 @@
    <div class="slide">
       <h1>books table</h1>
 <pre>CREATE TABLE books(
-   id     int(8) primary key auto_increment,
-   title  varchar(255),
-   author int(8),foreign key (author)
+   id        int(8) primary key auto_increment,
+   title     varchar(255),
+   author_id int(8),foreign key (author)
       references authors(id)
 ) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
    </div>
@@ -178,15 +170,15 @@
    <div class="slide">
       <h1>tips</h1>
       <p>Name link fields as singular</p>
-      <p>Check foreign key is the same field and type and size in both tables</p>
+      <p>Ensure foreign key is the same type and size in both tables</p>
    </div>
 
    <div class="slide">
       <h1>books table</h1>
 <pre>CREATE TABLE books(
-   id     int(8) primary key auto_increment,
-   title  varchar(255),
-   author <strong>int(8)</strong>,<strong>foreign key (<em>author</em>)</strong>
+   id        int(8) primary key auto_increment,
+   title     varchar(255),
+   author_id <strong>int(8)</strong>,<strong>foreign key (<em>author</em>)</strong>
       <strong>references <em>authors(id)</em></strong>
 ) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
    </div>
@@ -206,7 +198,7 @@
    </div>
 
    <div class="slide">
-      <h1>manual: create</h1>
+      <h1>SQL: Create</h1>
 <pre>my $sth = $dbh-&gt;prepare('
    INSERT INTO books
    (title, author)
@@ -219,20 +211,7 @@ $sth-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>manual: create</h1>
-<pre>my $sth = $dbh-&gt;prepare('
-   <strong>INSERT INTO books
-   (title, author)
-   values (?,?)</strong>
-');
-
-$sth-&gt;execute(
-  'A book title', <strong><em>$author_id</em></strong>
-);</pre>
-   </div>
-
-   <div class="slide">
-      <h1>manual: retrieve</h1>
+      <h1>SQL: Read</h1>
 <pre>my $sth = $dbh-&gt;prepare('
    SELECT title,
    authors.name as author_name
@@ -242,7 +221,7 @@ $sth-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>manual: retrieve</h1>
+      <h1>SQL: Read</h1>
 <pre>while( my $book = $sth-&gt;fetchrow_hashref() ) {
   print 'Author of '
      . $book-&gt;{title}
@@ -253,7 +232,7 @@ $sth-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>manual: update</h1>
+      <h1>SQL: Update</h1>
 <pre>my $update = $dbh-&gt;prepare('
    UPDATE books
    SET title = ?
@@ -266,7 +245,7 @@ $update-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>manual: delete</h1>
+      <h1>SQL: Delete</h1>
 <pre>my $delete = $dbh-&gt;prepare('
    DELETE FROM books
    WHERE id = ?
@@ -280,44 +259,23 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
    </div>
 
    <div class="slide">
-      <h1>DBIC: create</h1>
+      <h1>DBIC: Create</h1>
 <pre>my $book = $book_model-&gt;create({
    title  =&gt; 'A book title',
    author =&gt; $author_id,
 });</pre>
       <p>Look ma, no SQL!</p>
-      <p><strong>Tip:</strong> do not pass in primary_key field, even if it's empty/undef as the object returned will have an empty id, even if your field is auto increment.</p>
    </div>
 
    <div class="slide">
-      <h1>DBIC: create</h1>
-<pre>my $book = $book_model-&gt;create({
-   title  =&gt; 'A book title',
-   author =&gt; <strong>$author_id</strong>,
-});</pre>
-   </div>
-
-   <div class="slide">
-      <h1>DBIC: create</h1>
+      <h1>DBIC: Create</h1>
 <pre>my $pratchett = $author_model-&gt;create({
    name =&gt; 'Terry Pratchett',
 });</pre>
    </div>
 
    <div class="slide">
-      <h1>DBIC: create</h1>
-<pre>my $book = $pratchett-&gt;create_related(
-  books =&gt; {
-   title =&gt; 'Another Discworld book',
-});</pre>
-<strong>or</strong>
-<pre>my $book = $pratchett-&gt;add_to_books({
-   title =&gt; 'Another Discworld book',
-});</pre>
-   </div>
-
-   <div class="slide">
-      <h1>DBIC: create</h1>
+      <h1>DBIC: Create</h1>
 <pre>my $book = $pratchett-&gt;create_related(
   <strong>books</strong> =&gt; {
    title =&gt; 'Another Discworld book',
@@ -329,18 +287,18 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
    </div>
 
    <div class="slide">
-      <h1>DBIC: retrieve</h1>
+      <h1>DBIC: Read</h1>
       <p>DBIx::Class - Lots of ways to do the same thing...</p>
       <p><em>"There is more than one way to do it (TIMTOWTDI, usually pronounced "Tim Toady") is a Perl motto"</em></p>
    </div>
 
    <div class="slide">
-      <h1>DBIC: retrieve</h1>
+      <h1>DBIC: Read</h1>
 <pre>my $book = $book_model-&gt;find($book_id);
 
 my $book = $book_model-&gt;search({
    title =&gt; 'A book title',
-})-&gt;single;
+}, { rows =&gt; 1 })-&gt;single;
 
 my @books = $book_model-&gt;search({
    author =&gt; $author_id,
@@ -348,8 +306,8 @@ my @books = $book_model-&gt;search({
    </div>
 
    <div class="slide">
-      <h1>DBIC: retrieve</h1>
-<pre>while( my $book = $books_rs-&gt;next() ) {
+      <h1>DBIC: Read</h1>
+<pre>while( my $book = $books_rs-&gt;next ) {
  print 'Author of '
     . $book-&gt;title
     . ' is '
@@ -359,8 +317,8 @@ my @books = $book_model-&gt;search({
    </div>
 
    <div class="slide">
-      <h1>DBIC: retrieve</h1>
-<pre>my $books_rs = $book_model-&gt;search({
+      <h1>DBIC: Read</h1>
+<pre>my $books_rs = $book_rs-&gt;search({
    author =&gt; $author_id,
 });</pre>
       <p>Search takes SQL::Abstract formatted queries</p>
@@ -368,14 +326,14 @@ my @books = $book_model-&gt;search({
    </div>
 
    <div class="slide">
-      <h1>DBIC: update</h1>
+      <h1>DBIC: Update</h1>
 <pre>$book-&gt;update({
   title =&gt; 'New title',
 });</pre>
    </div>
 
    <div class="slide">
-      <h1>DBIC: delete</h1>
+      <h1>DBIC: Delete</h1>
 <pre>$book-&gt;delete;</pre>
    </div>
 
@@ -393,7 +351,6 @@ my @books = $book_model-&gt;search({
 
    <div class="slide">
       <p>too much typing!  too much maintenance!</p>
-      <p>too much maintenance!</p>
    </div>
 
    <div class="slide">
