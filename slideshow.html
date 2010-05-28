@@ -411,74 +411,31 @@ my $schema = MyApp::Schema-&gt;connect($dsn, $user, $pass);
    </div>
 
    <div class="slide">
-      <h1>splitting logic cleanly</h1>
-      <p>Foo::Schema::Result::Foo = an individual row</p>
-      <p>Foo::Schema::ResultSet::Foo = searches / results</p>
+      <h1>Splitting Logic Cleanly</h1>
+      <p>MyApp::Schema::Result::Foo = individual row</p>
+      <p>MyApp::Schema::ResultSet::Foo = searches / table </p>
    </div>
 
    <div class="slide">
-      <h1>using your Schema</h1>
-      <pre>example usage code goes here</pre>
+      <h1>Using your Schema</h1>
+<pre>#!perl
+use strict; use warnings;
+use lib 'lib';
+use MyApp::Schema;
+my $schema = MyApp::Schema-&gt;connect($dns, $user, $pass);
+my $author_rs = $schema-&gt;resultset('Author');
+my $author    = $author_rs-&gt;create({
+   name =&gt; 'Douglas Adams',
+});
+my $book = $author-&gt;add_to_books({
+   title =&gt; '42',
+});
+</pre>
    </div>
 
    <div class="slide">
       <h1>DEBUGGING</h1>
       <pre>DBIC_TRACE=1 ./your_script.pl</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Schema::Loader</h1>
-<pre>Foo::Schema::Result::Authors-&gt;table("authors");
-Foo::Schema::Result::Authors-&gt;add_columns(
-   id =&gt; {
-      data_type     =&gt; "INT",
-      default_value =&gt; undef,
-      is_nullable   =&gt; 0,
-      size          =&gt; 8
-   },
-   title =&gt; {
-      data_type     =&gt; "VARCHAR",
-      default_value =&gt; undef,
-      is_nullable   =&gt; 1,
-      size          =&gt; 255,
-   },
-);
-Foo::Schema::Result::Authors-&gt;set_primary_key("id");</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Schema::Loader</h1>
-<pre>Foo::Schema::Result::Books->table("books");
-Foo::Schema::Result::Books->add_columns(
-   id =&gt; {
-      data_type     =&gt; "INT",
-      default_value =&gt; undef,
-      is_nullable   =&gt; 0,
-      size          =&gt; 8
-   },
-   name =&gt; {
-      data_type     =&gt; "VARCHAR",
-      default_value =&gt; undef,
-      is_nullable   =&gt; 1,
-      size          =&gt; 255,
-   },
-   author =&gt; {
-      data_type     =&gt; "INT",
-      default_value =&gt; undef,
-      is_nullable   =&gt; 1,
-      size          =&gt; 8
-   },
-);
-Foo::Schema::Result::Books-&gt;set_primary_key("id");</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Schema::Loader</h1>
-<pre>Foo::Schema::Result::Authors-&gt;has_many(books =&gt; "Foo::Schema::Books",
-   { "foreign.author" =&gt; "self.id" });
-
-Foo::Schema::Result::Books-&gt;belongs_to(author =&gt; "Foo::Schema::Authors",
-   { id =&gt; "author" });</pre>
    </div>
 
    <div class="slide">
@@ -492,10 +449,10 @@ INSERT INTO books (author, title)
 
    <div class="slide">
       <h1>overloading</h1>
-<pre>Foo::Schema::Result::Books
-Foo::Schema::ResultSet::Books
-Foo::Schema::Result::Authors
-Foo::Schema::ResultSet::Books</pre>
+<pre>MyApp::Schema::Result::Book
+MyApp::Schema::ResultSet::Book
+MyApp::Schema::Result::Author
+MyApp::Schema::ResultSet::Book</pre>
    </div>
 
    <div class="slide">
@@ -504,6 +461,8 @@ Foo::Schema::ResultSet::Books</pre>
 use base 'DBIx::Class';
 use strict;
 use warnings;
+
+# Result code here
 
 sub isbn {
    my $self = shift;
