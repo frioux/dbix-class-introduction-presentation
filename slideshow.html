@@ -393,12 +393,21 @@ __PACKAGE__-&gt;belongs_to( author =&gt;
    </div>
 
    <div class="slide">
-      <p>too much typing!  too much maintenance!</p>
-   </div>
-
-   <div class="slide">
       <h1>Schema::Loader</h1>
-      <pre>code for S::L here</pre>
+      <p>DB -&gt; Perl vs Perl -&gt; DB</p>
+<pre>package MyApp::Schema;
+use strict; use warnings;
+use base 'DBIx::Class::Schema::Loader';
+__PACKAGE__-&gt;loader_options({
+   naming =&gt; 'v7',
+   debug  =&gt; $ENV{DBIC_TRACE},
+});
+1;
+
+# elsewhere...
+
+my $schema = MyApp::Schema-&gt;connect($dsn, $user, $pass);
+</pre>
    </div>
 
    <div class="slide">
