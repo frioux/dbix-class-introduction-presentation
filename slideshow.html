@@ -457,8 +457,8 @@ Foo::Schema::ResultSet::Book</pre>
 
    <div class="slide">
       <h1>Result::</h1>
-<pre>package Foo::Schema::Result::Books;
-use base 'DBIx::Class';
+<pre>package Foo::Schema::Result::Book;
+use base 'DBIx::Class::Core';
 use strict;
 use warnings;
 
@@ -485,8 +485,8 @@ sub isbn {
 
    <div class="slide">
       <h1>Result:: (inflating)</h1>
-<pre>package Foo::Schema::Result::Books;
-use base 'DBIx::Class';
+<pre>package Foo::Schema::Result::Book;
+use base 'DBIx::Class::Core';
 use strict;
 use warnings;
 
@@ -561,7 +561,7 @@ my @books        = $book_rs-&gt;all;</pre>
 or
 
 <pre>my $book_rs = $schema-&gt;resultset('Book')
-  -&gt;the_ultimate_books();
+  -&gt;the_ultimate_books;
 $book_rs = $book_rs-&gt;by_author($author);</pre>
 <pre># Debug (SQL):
 
@@ -585,12 +585,8 @@ my @books = $rs-&gt;all;</pre>
 
    <div class="slide">
       <h1>overloading before new record</h1>
-   </div>
-
-   <div class="slide">
-      <h1>overloading before new record</h1>
-      <pre>package Foo::Schema::Result::Authors;
-use base 'DBIx::Class';
+      <pre>package Foo::Schema::Result::Author;
+use base 'DBIx::Class::Core';
 
 sub new {
    my ( $class, $attrs ) = @_;
@@ -703,8 +699,8 @@ __PACKAGE__-&gt;belongs_to(
 
    <div class="slide">
       <h1>many_to_many</h1>
-      <pre>package Foo::Schema::<strong>Result::Books</strong>;
-use base 'DBIx::Class';
+      <pre>package Foo::Schema::<strong>Result::Book</strong>;
+use base 'DBIx::Class::Core';
 
 __PACKAGE__-&gt;many_to_many(
    authors =&gt; "author_and_books", 'author'
@@ -717,8 +713,8 @@ __PACKAGE__-&gt;many_to_many(
 
    <div class="slide">
       <h1>many_to_many</h1>
-      <pre>package Foo::Schema::<strong>Result::Books</strong>;
-use base 'DBIx::Class';
+      <pre>package Foo::Schema::<strong>Result::Book</strong>;
+use base 'DBIx::Class::Core';
 
 __PACKAGE__-&gt;many_to_many(
    authors <strong># Accessor name</strong>
@@ -731,8 +727,8 @@ __PACKAGE__-&gt;many_to_many(
 
    <div class="slide">
       <h1>many_to_many</h1>
-      <pre>package Foo::Schema::Result::Authors;
-use base 'DBIx::Class';
+      <pre>package Foo::Schema::Result::Author;
+use base 'DBIx::Class::Core';
 
 __PACKAGE__-&gt;many_to_many(
    "books" <strong># Accessor Name</strong>
