@@ -342,11 +342,54 @@ my @books = $book_model-&gt;search({
    </div>
 
    <div class="slide">
-      <pre>Example of a DBIC Result</pre>
+<pre>package MyApp::Schema::Result::Author;
+use strict; use warnings;
+__PACKAGE__-&gt;table('authors');
+__PACKAGE__-&gt;add_columns(
+  id =&gt; {
+    data_type =&gt; 'int',
+    size      =&gt; 8,
+  },
+  title =&gt; {
+    data_type   =&gt; 'varchar',
+    is_nullable =&gt; 1,
+    size        =&gt; 255,
+  },
+);
+__PACKAGE__-&gt;set_primary_key('id');
+__PACKAGE__-&gt;has_many( books =&gt;
+   'MyApp::Schema::Result::Book', 'author_id'
+);
+1;
+</pre>
    </div>
 
    <div class="slide">
-      <pre>Example of a DBIC Result</pre>
+<pre>package MyApp::Schema::Result::Book;
+use strict; use warnings;
+__PACKAGE__-&gt;table('books');
+__PACKAGE__-&gt;add_columns(
+  id =&gt; {
+    data_type =&gt; 'int',
+    size      =&gt; 8,
+  },
+  name =&gt; {
+    data_type   =&gt; 'varchar',
+    is_nullable =&gt; 1,
+    size        =&gt; 255,
+  },
+  author_id =&gt; {
+    data_type   =&gt; 'int',
+    size        =&gt; 8,
+    is_nullable =&gt; 1, # &lt;-- probably should be 0
+  },
+);
+__PACKAGE__-&gt;set_primary_key('id');
+__PACKAGE__-&gt;belongs_to( author =&gt;
+   'MyApp::Schema::Result::Author', 'author_id'
+);
+1;
+</pre>
    </div>
 
    <div class="slide">
