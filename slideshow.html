@@ -174,16 +174,6 @@
    </div>
 
    <div class="slide">
-      <h1>books table</h1>
-<pre>CREATE TABLE books(
-   id        int(8) primary key auto_increment,
-   title     varchar(255),
-   author_id <strong>int(8)</strong>,<strong>foreign key (<em>author</em>)</strong>
-      <strong>references <em>authors(id)</em></strong>
-) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
-   </div>
-
-   <div class="slide">
       <h1>CRUD compared</h1>
       <ul>
          <li><strong>C</strong> - Create</li>
@@ -201,7 +191,7 @@
       <h1>SQL: Create</h1>
 <pre>my $sth = $dbh-&gt;prepare('
    INSERT INTO books
-   (title, author)
+   (title, author_id)
    values (?,?)
 ');
 
@@ -260,16 +250,16 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
 
    <div class="slide">
       <h1>DBIC: Create</h1>
-<pre>my $book = $book_model-&gt;create({
-   title  =&gt; 'A book title',
-   author =&gt; $author_id,
+<pre>my $book = $book_rs-&gt;create({
+   title     =&gt; 'A book title',
+   author_id =&gt; $author_id,
 });</pre>
       <p>Look ma, no SQL!</p>
    </div>
 
    <div class="slide">
       <h1>DBIC: Create</h1>
-<pre>my $pratchett = $author_model-&gt;create({
+<pre>my $pratchett = $author_rs-&gt;create({
    name =&gt; 'Terry Pratchett',
 });</pre>
    </div>
@@ -288,19 +278,18 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
 
    <div class="slide">
       <h1>DBIC: Read</h1>
-      <p>DBIx::Class - Lots of ways to do the same thing...</p>
-      <p><em>"There is more than one way to do it (TIMTOWTDI, usually pronounced "Tim Toady") is a Perl motto"</em></p>
+      <p>DBIx::Class - TIMTOWTDI</p>
    </div>
 
    <div class="slide">
       <h1>DBIC: Read</h1>
-<pre>my $book = $book_model-&gt;find($book_id);
+<pre>my $book = $book_rs-&gt;find($book_id);
 
-my $book = $book_model-&gt;search({
+my $book = $book_rs-&gt;search({
    title =&gt; 'A book title',
 }, { rows =&gt; 1 })-&gt;single;
 
-my @books = $book_model-&gt;search({
+my @books = $book_rs-&gt;search({
    author =&gt; $author_id,
 })-&gt;all;</pre>
    </div>
@@ -318,7 +307,7 @@ my @books = $book_model-&gt;search({
 
    <div class="slide">
       <h1>DBIC: Read</h1>
-<pre>my $books_rs = $book_rs-&gt;search({
+<pre>my $resultset = $book_rs-&gt;search({
    author =&gt; $author_id,
 });</pre>
       <p>Search takes SQL::Abstract formatted queries</p>
@@ -343,12 +332,11 @@ my @books = $book_model-&gt;search({
 
    <div class="slide">
 <pre>package Foo::Schema::Result::Author;
-use strict; use warnings;
 __PACKAGE__-&gt;table('authors');
 __PACKAGE__-&gt;add_columns(
   id =&gt; {
-    data_type =&gt; 'int',
-    size      =&gt; 8,
+    data_type         =&gt; 'int',
+    is_auto_increment =&gt; 1
   },
   title =&gt; {
     data_type   =&gt; 'varchar',
@@ -365,23 +353,24 @@ __PACKAGE__-&gt;has_many( books =&gt;
    </div>
 
    <div class="slide">
-<pre>package Foo::Schema::Result::Book;
+<pre style="float: left; font-size: 80%;">package Foo::Schema::Result::Book;
 use strict; use warnings;
 __PACKAGE__-&gt;table('books');
 __PACKAGE__-&gt;add_columns(
   id =&gt; {
-    data_type =&gt; 'int',
-    size      =&gt; 8,
+    data_type         =&gt; 'int',
+    is_auto_increment =&gt; 1
   },
   name =&gt; {
     data_type   =&gt; 'varchar',
     is_nullable =&gt; 1,
     size        =&gt; 255,
   },
+</pre>
+<pre style="float: left; font-size: 80%;">
   author_id =&gt; {
     data_type   =&gt; 'int',
     size        =&gt; 8,
-    is_nullable =&gt; 1, # &lt;-- probably should be 0
   },
 );
 __PACKAGE__-&gt;set_primary_key('id');
@@ -555,11 +544,11 @@ my @books       = $book_search-&gt;all;</pre>
    <div class="slide">
       <h1>ResultSets: Chaining</h1>
 <pre>
-my $book_rs      = $schema-&gt;resultset('Book');
-my $author_rs    = $schema-&gt;resultset('Author');
-my $author       = $author_model-&gt;search({ name =&gt; 'Douglas Adams' })-&gt;single;
-my $book_rs      = $book_model-&gt;the_ultimate_books-&gt;by_author($author);
-my @books        = $book_rs-&gt;all;</pre>
+my $book_rs   = $schema-&gt;resultset('Book');
+my $author_rs = $schema-&gt;resultset('Author');
+my $author    = $author_rs-&gt;search({ name =&gt; 'Douglas Adams' })-&gt;single;
+$book_rs      = $book_rs-&gt;the_ultimate_books-&gt;by_author($author);
+my @books     = $book_rs-&gt;all;</pre>
    </div>
 
    <div class="slide">
@@ -581,8 +570,8 @@ $book_rs = $book_rs-&gt;by_author($author);</pre>
    </div>
 
    <div class="slide">
-      <h1>ResultSets::chaining</h1>
-<pre>my $rs = $book_model
+      <h1>ResultSets: Chaining</h1>
+<pre>my $rs = $book_rs
   -&gt;category('childrens')
   -&gt;by_author($author)
   -&gt;published_after('1812')
@@ -612,6 +601,7 @@ sub new {
 
    <div class="slide">
       <h1>Multiple Authors</h1>
+      <p>We want to allow a book to be by more than one author</p>
    </div>
 
    <div class="slide">
@@ -628,7 +618,7 @@ sub new {
   foreign key (author_id)   references authors(id)
 ) engine = InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `books` DROP `author`;</pre>
+ALTER TABLE `books` DROP `author_id`;</pre>
    </div>
 
    <div class="slide">
@@ -719,7 +709,7 @@ __PACKAGE__-&gt;many_to_many(
 use Foo::Schema;
 my $schema    = Foo::Schema-&gt;connect(...);
 my $author_rs = $schema-&gt;resultset('Authors');
-my $author    = $author_model-&gt;search({
+my $author    = $author_rs-&gt;search({
    name =&gt; 'Douglas Adams',
 })-&gt;single;
 $author-&gt;add_to_books({
@@ -729,7 +719,7 @@ $author-&gt;add_to_books({
 
    <div class="slide">
       <h1>using many_to_many</h1>
-      <pre>my $author = $author_model-&gt;search({
+      <pre>my $author = $author_rs-&gt;search({
    name =&gt; 'Douglas Adams',
 })-&gt;single;
 <strong>$author-&gt;add_to_books({
@@ -758,12 +748,20 @@ $book-&gt;add_to_authors($author_2);</pre>
 
    <div class="slide">
       <h1>error messages</h1>
-      <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'Foo::Schema::Result::Authors': Can't locate object method "many_to_many" via package "Foo::Schema::Result::Author" at lib/Foo/Schema/Result/Authors.pm line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
+<pre>DBIx::Class::Schema::Loader::connection(): Failed to load external
+class definition for 'Foo::Schema::Result::Authors': Can't locate object
+method "many_to_many" via package "Foo::Schema::Result::Author" at
+lib/Foo/Schema/Result/Authors.pm line 9.Compilation failed in require at
+/Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
    </div>
 
    <div class="slide">
       <h1>error messages</h1>
-   <pre>DBIx::Class::Schema::Loader::connection(): Failed to load external class definition for 'Foo::Schema::Result::Authors': Can't locate object method "many_to_many" via package "Foo::Schema::<strong>Result::Author</strong>" at lib/Foo/Schema/<strong>Result/Authors.pm</strong> line 9.Compilation failed in require at /Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
+<pre>DBIx::Class::Schema::Loader::connection(): Failed to load external
+class definition for 'Foo::Schema::Result::Authors': Can't locate object
+method "many_to_many" via package "Foo::Schema::<strong>Result::Author</strong>" at
+lib/Foo/Schema/<strong>Result/Authors.pm</strong> line 9.Compilation failed in require at
+/Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
    </div>
 
    <div class="slide">
@@ -785,6 +783,7 @@ $book-&gt;add_to_authors($author_2);</pre>
          <li>HashRefInflator</li>
          <li>Subqueries</li>
          <li>ResultSetColumn</li>
+         <li>Aggregate Queries</li>
       </ul>
    </div>
 
@@ -815,7 +814,7 @@ __PACKAGE__-&gt;config(
 );
 
 1;</pre>
-   <p>Keep your Schema in a <em>separate</em> package to your Catalyst application</p>
+   <p>Keep your Schema in a <em>separate</em> package from your Catalyst application</p>
    </div>
 
    <div class="slide">
@@ -823,8 +822,8 @@ __PACKAGE__-&gt;config(
 <pre>sub action_name : Local {
   my ($self, $c) = @_;
 
-  my $model = $c-&gt;model('Schema::Foo');
-  my $author_model = $model-&gt;resultset('Authors');
+  my $schema = $c-&gt;model('Schema::Foo');
+  my $author_rs = $schema-&gt;resultset('Authors');
 
 }
 
