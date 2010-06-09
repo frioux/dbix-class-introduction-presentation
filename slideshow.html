@@ -82,9 +82,7 @@
    </div>
 
    <div class="slide">
-      <h1>assumptions</h1>
-      <p>You know a little about Perl and using objects</p>
-      <p>You know a little bit about databases and using foreign keys</p>
+      <h1>What's up guys?</h1>
       <div class="notes">
          <ul>
             <li>How many people have designed a database with Foreign Keys?</li>
@@ -115,76 +113,21 @@
    </div>
 
    <div class="slide">
-      <h1>point of note</h1>
-      <p><em>"Debugging is twice as hard as writing the code in the first
-      place. Therefore, if you write the code as cleverly as possible,
-      you are, by definition, not smart enough to debug it." - Brian
-      W. Kernighan</em></p>
-
-      <p>This talk is about making it easy so we are less likely to get
-      confused</p>
+      <h1>Purpose</h1>
+      <p>The purpose of this talk is to show you as many features of
+      DBIx::Class in 40 minutes
+		so that when you need to do something with it later you will
+		know what's possible</p>
    </div>
 
    <div class="slide">
-      <h1>Examples Table Setup</h1>
-      <ul>
-         <li>Authors</li>
-         <li>Books</li>
-      </ul>
-      <em>MySQL not recommended</em>
-   </div>
-
-   <div class="slide">
-      <h1>authors table</h1>
-<pre>CREATE TABLE authors(
-   id   int(8) primary key auto_increment,
-   name varchar(255)
-) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>tips</h1>
-      <p>Name tables as simple plurals (<strong>add an S</strong>) - makes relationships easier to understand</p>
-      <p>Use a character set (<strong>UTF8</strong>) from the start (for international characters)</p>
-   </div>
-
-   <div class="slide">
-      <h1>authors table</h1>
-<pre>CREATE TABLE author<strong>s</strong>(
-   id   int(8) primary key auto_increment,
-   name varchar(255)
-) engine = <strong>InnoDB</strong> DEFAULT CHARSET=<strong>utf8</strong>;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>books table</h1>
-<pre>CREATE TABLE books(
-   id        int(8) primary key auto_increment,
-   title     varchar(255),
-   author_id int(8),foreign key (author)
-      references authors(id)
-) engine = InnoDB DEFAULT CHARSET=utf8;</pre>
-   </div>
-
-
-   <div class="slide">
-      <h1>tips</h1>
-      <p>Name link fields as singular</p>
-      <p>Ensure foreign key is the same type and size in both tables</p>
-   </div>
-
-   <div class="slide">
-      <h1>CRUD compared</h1>
+      <h1>Basic CRUD</h1>
       <ul>
          <li><strong>C</strong> - Create</li>
          <li><strong>R</strong> - Read</li>
          <li><strong>U</strong> - Update</li>
          <li><strong>D</strong> - Delete</li>
       </ul>
-   </div>
-
-   <div class="slide">
-      <h1>Manual (SQL)</h1>
    </div>
 
    <div class="slide">
@@ -198,6 +141,35 @@
 $sth-&gt;execute(
   'A book title', $author_id
 );</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: Create</h1>
+<pre>my $book = $book_rs-&gt;create({
+   title     =&gt; 'A book title',
+   author_id =&gt; $author_id,
+});</pre>
+      <p>Don't need to work to pair placeholders and values</p>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: Create</h1>
+<pre>my $pratchett = $author_rs-&gt;create({
+   name =&gt; 'Terry Pratchett',
+});</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: Create</h1>
+<pre>my $book = $pratchett-&gt;create_related(
+  <strong>books</strong> =&gt; {
+   title =&gt; 'Another Discworld book',
+});</pre>
+<strong>or</strong>
+<pre>my $book = $pratchett-&gt;add_to_<strong>books</strong>({
+   title =&gt; 'Another Discworld book',
+});</pre>
+		<p>Automaticaly fills in foreign key for you</p>
    </div>
 
    <div class="slide">
@@ -222,66 +194,6 @@ $sth-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>SQL: Update</h1>
-<pre>my $update = $dbh-&gt;prepare('
-   UPDATE books
-   SET title = ?
-   WHERE id = ?
-');
-
-$update-&gt;execute(
-  'New title',<strong>$book_id</strong>
-);</pre>
-   </div>
-
-   <div class="slide">
-      <h1>SQL: Delete</h1>
-<pre>my $delete = $dbh-&gt;prepare('
-   DELETE FROM books
-   WHERE id = ?
-');
-
-$delete-&gt;execute(<strong>$book_id</strong>);</pre>
-   </div>
-
-   <div class="slide">
-      <h1>DBIx::Class</h1>
-   </div>
-
-   <div class="slide">
-      <h1>DBIC: Create</h1>
-<pre>my $book = $book_rs-&gt;create({
-   title     =&gt; 'A book title',
-   author_id =&gt; $author_id,
-});</pre>
-      <p>Look ma, no SQL!</p>
-   </div>
-
-   <div class="slide">
-      <h1>DBIC: Create</h1>
-<pre>my $pratchett = $author_rs-&gt;create({
-   name =&gt; 'Terry Pratchett',
-});</pre>
-   </div>
-
-   <div class="slide">
-      <h1>DBIC: Create</h1>
-<pre>my $book = $pratchett-&gt;create_related(
-  <strong>books</strong> =&gt; {
-   title =&gt; 'Another Discworld book',
-});</pre>
-<strong>or</strong>
-<pre>my $book = $pratchett-&gt;add_to_<strong>books</strong>({
-   title =&gt; 'Another Discworld book',
-});</pre>
-   </div>
-
-   <div class="slide">
-      <h1>DBIC: Read</h1>
-      <p>DBIx::Class - TIMTOWTDI</p>
-   </div>
-
-   <div class="slide">
       <h1>DBIC: Read</h1>
 <pre>my $book = $book_rs-&gt;find($book_id);
 
@@ -292,6 +204,7 @@ my $book = $book_rs-&gt;search({
 my @books = $book_rs-&gt;search({
    author =&gt; $author_id,
 })-&gt;all;</pre>
+		<p>TMTOWTDI</p>
    </div>
 
    <div class="slide">
@@ -315,10 +228,33 @@ my @books = $book_rs-&gt;search({
    </div>
 
    <div class="slide">
+      <h1>SQL: Update</h1>
+<pre>my $update = $dbh-&gt;prepare('
+   UPDATE books
+   SET title = ?
+   WHERE id = ?
+');
+
+$update-&gt;execute(
+  'New title',<strong>$book_id</strong>
+);</pre>
+   </div>
+
+   <div class="slide">
       <h1>DBIC: Update</h1>
 <pre>$book-&gt;update({
   title =&gt; 'New title',
 });</pre>
+   </div>
+
+   <div class="slide">
+      <h1>SQL: Delete</h1>
+<pre>my $delete = $dbh-&gt;prepare('
+   DELETE FROM books
+   WHERE id = ?
+');
+
+$delete-&gt;execute(<strong>$book_id</strong>);</pre>
    </div>
 
    <div class="slide">
