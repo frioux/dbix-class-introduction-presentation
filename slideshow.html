@@ -186,6 +186,7 @@ $sth-&gt;execute(
       <ul class="incremental">
          <li>No need to pair placeholders and values</li>
          <li>Automatically gets autoincremented id for you</li>
+         <li>Transparrently uses INSERT ... RETURNING for databases that support it</li>
       </ul>
    </div>
 
@@ -255,6 +256,9 @@ $update-&gt;execute(
 <pre>$book-&gt;update({
   title =&gt; 'New title',
 });</pre>
+      <ul class="incremental">
+         <li>Lazy Update</li>
+      </ul>
    </div>
 
    <div class="slide">
@@ -433,7 +437,9 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
       <h1>Result vs ResultSet</h1>
          <ul class="incremental">
             <li>Result == Row</li>
-            <li>ResultSet == Query</li>
+            <li>ResultSet == Query Plan<ul class="incremental">
+               <li>Internal Join Optimizer for all DB's (!!!)</li>
+            </ul></li>
             <li>(less important but...)</li>
             <li>ResultSource == Table</li>
             <li>Storage == Database</li>
