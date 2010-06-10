@@ -217,7 +217,7 @@ $sth-&gt;execute(
 
 my $book = $book_rs-&gt;search({
    title =&gt; 'A book title',
-}, { rows =&gt; 1 })-&gt;single;
+}, { rows =&gt; 1 })-&gt;next;
 
 my @books = $book_rs-&gt;search({
    author =&gt; $author_id,
@@ -485,7 +485,23 @@ sub cheap {
 
    <div class="slide">
       <h1>search_related</h1>
-      <pre>*get example from work*</pre>
+<pre>my @test_rs = ($schema-&gt;resultset('User')-&gt;search({'me.userid' =&gt; 'marial'})
+   -&gt;related_resultset('access')
+   -&gt;related_resultset('mgmt')
+   -&gt;related_resultset('orders')-&gt;search({'orders.reporttype' =&gt; 0})
+   -&gt;related_resultset('shops')-&gt;search({'shops.status' =&gt; 'Completed', 'shops.datecompleted' =&gt; {-between =&gt; ['2009-10-01','2009-10-08']}})
+   -&gt;related_resultset('rpt_score')-&gt;get_column('raw_scores')-&gt;first);
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>related_resultset</h1>
+<pre>my @screens = $user-&gt;roles
+   -&gt;related_resultset('role_permissions')
+   -&gt;related_resultset('permission')
+   -&gt;related_resultset('permission_screens')
+   -&gt;related_resultset('screen')
+   -&gt;search(undef, { distinct =&gt; 1 })-&gt;all;</pre>
    </div>
 
    <div class="slide">
