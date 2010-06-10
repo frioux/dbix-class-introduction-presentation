@@ -76,7 +76,7 @@ ul.urls {list-style: none; display: inline; margin: 0;}
 html>body .external {border-bottom: none;}
 .external:after {content: " \274F"; font-size: smaller; color: #F93;}
 
-.incremental, .incremental *, .incremental *:after {color: #999; visibility: visible;}
+.incremental, .incremental *, .incremental *:after {color: #999; visibility: hidden;}
 img.incremental, canvas.incremental {visibility: hidden;}
 .slide .current {color: #ff0;}
 
