@@ -369,6 +369,7 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
       state  =&gt; { abbreviation =&gt; 'ME' },
       city   =&gt; { name =&gt; 'Lowell' },
    },
+});
 </pre>
       <div class="notes">
          <ul>
@@ -418,9 +419,9 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
 
    <div class="slide">
       <h1>SQL::Abstract</h1>
-      <pre>my $resultset = $book_rs-&gt;search({
-         name =&gt; { -like =&gt; "%$nick%" },
-      });</pre>
+<pre>my $resultset = $book_rs-&gt;search({
+   name =&gt; { -like =&gt; "%$nick%" },
+});</pre>
       <ul class="incremental">
          <li>(kinda) introspectible</li>
          <li>Prettier than SQL</li>
@@ -443,14 +444,12 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
 <pre>package MyApp::Schema::ResultSet::Book;
 use base 'DBIx::Class::ResultSet';
 sub good {
-   my $self = shift;
-   $self-&gt;search({
+   $_[0]-&gt;search({
       rating =&gt; { '&gt;=' =&gt; 4 },
    })
 };
 sub cheap {
-   my $self = shift;
-   $self-&gt;search({
+   $_[0]-&gt;search({
       price =&gt; { '&lt;=' =&gt; 5}
    })
 };
@@ -478,67 +477,48 @@ sub cheap {
    </div>
 
    <div class="slide">
-      <h1>DEBUGGING</h1>
-      <pre>DBIC_TRACE=1 ./your_script.pl</pre>
+      <h1>search_related</h1>
+      <pre>*get example from work*</pre>
    </div>
 
    <div class="slide">
-      <h1>SQL - debugging</h1>
-<pre>INSERT INTO authors (name)
-   VALUES (?): 'Douglas Adams'
+      <h1>bonus rel methods</h1>
+<pre>my $book = $author-&gt;create_related(
+  <strong>books</strong> =&gt; {
+   title =&gt; 'Another Discworld book',
+});
 
-INSERT INTO books (author, title)
-   VALUES (?, ?): '5', '42'</pre>
+my $book2 = $pratchett-&gt;add_to_<strong>books</strong>({
+   title =&gt; 'MOAR Discworld book',
+});</pre>
+      <ul class="incremental">
+         <li>Automaticaly fills in foreign key for you</li>
+      </ul>
    </div>
 
    <div class="slide">
-      <h1>overloading</h1>
-<pre>Foo::Schema::Result::Book
-Foo::Schema::ResultSet::Book
-Foo::Schema::Result::Author
-Foo::Schema::ResultSet::Book</pre>
+      <h1>Excellent Transaction Support</h1>
+<pre>$schema-&gt;txn_do(sub {
+   ...
+});
+
+my $guard = $schema-&gt;txn_scope_guard;
+# ...
+$guard-&gt;commit;
+
+$schema-&gt;txn_begin; # &lt;-- low level
+# ...
+$schema-&gt;txn_commit;
+</pre>
    </div>
 
    <div class="slide">
-      <h1>Result::</h1>
+      <h1>InflateColumn</h1>
 <pre>package Foo::Schema::Result::Book;
 use base 'DBIx::Class::Core';
-use strict;
-use warnings;
-
 # Result code here
-
-sub isbn {
-   my $self = shift;
-
-   # search amazon or something
-   my $api = Amazon::API-&gt;book({
-      title =&gt; $self-&gt;title
-   });
-
-   return $api-&gt;isbn;
-}
-
-1;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Result::</h1>
-<pre>print $book-&gt;isbn;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Result:: (inflating)</h1>
-<pre>package Foo::Schema::Result::Book;
-use base 'DBIx::Class::Core';
-use strict;
-use warnings;
-
-# Result code here
-
 __PACKAGE__-&gt;load_components('InflateColumn');
 use DateTime::Format::MySQL;
-
 __PACKAGE__-&gt;<strong>inflate_column</strong>(
    <strong>date_published</strong> =&gt; {
       inflate =&gt; sub { DateTime::Format::MySQL-&gt;parse_date(shift) },
@@ -549,13 +529,13 @@ __PACKAGE__-&gt;<strong>inflate_column</strong>(
    </div>
 
    <div class="slide">
-      <h1>Result:: (deflating)</h1>
+      <h1>InflateColumn: deflation</h1>
 <pre>$book-&gt;date_published(DateTime-&gt;now);
 $book-&gt;update;</pre>
    </div>
 
    <div class="slide">
-      <h1>Result:: (inflating)</h1>
+      <h1>InflateColumn: inflation</h1>
 <pre>my $date_published = $book-&gt;date_published;
 print $date_published-&gt;month_abbr;</pre>
 
@@ -563,319 +543,96 @@ print $date_published-&gt;month_abbr;</pre>
    </div>
 
    <div class="slide">
-      <h1>ResultSets::</h1>
-<pre>package Foo::Schema::ResultSet::Books;
-use base 'DBIx::Class::ResultSet';
-sub the_ultimate_books {
-   my $self = shift;
-   return $self-&gt;search({ title =&gt; { -like =&gt; '%42%' } });
-}
-sub by_author {
-   my ( $self, $author ) = @_;
-   return $self-&gt;search({ author =&gt; $author-&gt;id })
-}
-
-1;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>ResultSets::</h1>
-<pre>use Foo::Schema;
-my $schema = Foo::Schema-&gt;connect(...);
-my $book_rs     = Foo::Schema-&gt;resultset('Book');
-my $book_search = $book_rs-&gt;the_ultimate_books;
-my @books       = $book_search-&gt;all;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>ResultSets: Chaining</h1>
-<pre>
-my $book_rs   = $schema-&gt;resultset('Book');
-my $author_rs = $schema-&gt;resultset('Author');
-my $author    = $author_rs-&gt;search({ name =&gt; 'Douglas Adams' })-&gt;single;
-$book_rs      = $book_rs-&gt;the_ultimate_books-&gt;by_author($author);
-my @books     = $book_rs-&gt;all;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>ResultSets: Chaining</h1>
-<pre>$book_rs = $schema-&gt;resultset('Book')
-  -&gt;the_ultimate_books
-  -&gt;by_author($author);</pre>
-or
-
-<pre>my $book_rs = $schema-&gt;resultset('Book')
-  -&gt;the_ultimate_books;
-$book_rs = $book_rs-&gt;by_author($author);</pre>
-<pre># Debug (SQL):
-
-# SELECT me.id, me.title, me.date_published, me.author
-#   FROM books me
-#   WHERE ( ( ( author = ? ) AND ( title LIKE ? ) ) ): '5', '%42%'
-#   WHERE ( ( ( author = ? ) AND ( title LIKE ? ) ) ): '5', '%42%'</pre>
-   </div>
-
-   <div class="slide">
-      <h1>ResultSets: Chaining</h1>
-<pre>my $rs = $book_rs
-  -&gt;category('childrens')
-  -&gt;by_author($author)
-  -&gt;published_after('1812')
-  -&gt;first_page_contains('once upon')
-  -&gt;rating_greater_than(4);
-
-my @books = $rs-&gt;all;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>overloading before new record</h1>
-      <pre>package Foo::Schema::Result::Author;
+      <h1>FilterColumn</h1>
+<pre>package Foo::Schema::Result::Book;
 use base 'DBIx::Class::Core';
+# Result code here
+__PACKAGE__-&gt;load_components('FilterColumn');
 
-sub new {
-   my ( $class, $attrs ) = @_;
-   # Mess with $attrs
-   my $new = $class-&gt;next::method($attrs);
-   return $new
-}
-
-1;</pre>
-
-   <div class="slide">
-      <h1>Relationships</h1>
-   </div>
-
-   <div class="slide">
-      <h1>Multiple Authors</h1>
-      <p>We want to allow a book to be by more than one author</p>
-   </div>
-
-   <div class="slide">
-      <h1>a few relationships</h1>
-      <img src="img/afewrels.png" />
-   </div>
-
-   <div class="slide">
-      <h1>Join Table</h1>
-<pre>CREATE TABLE author_and_books(
-  book_id    int(8),
-  author_id  int(8),
-  foreign key (book_id)     references books(id),
-  foreign key (author_id)   references authors(id)
-) engine = InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `books` DROP `author_id`;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>has_many</h1>
-      <img src="img/hasmany1.png" />
-   </div>
-
-   <div class="slide">
-      <h1>has_many</h1>
-<pre>package Foo::Schema::<strong>Result::Book</strong>;
-
-__PACKAGE__-&gt;has_many( author_and_books =&gt;
-   'Foo::Schema::Result::Author_Book', 'book_id'
+__PACKAGE__-&gt;<strong>filter_column</strong>(
+   <strong>length</strong> =&gt; {
+      to_storage   =&gt; 'to_metric',
+      from_storage =&gt; 'to_imperial',
+   },
 );
+
+sub to_metric   { $_[1] * .305 }
+sub to_imperial { $_[1] * 3.28 }
+# Automatic see: DBIx::Class::InflateColumn::DateTime</pre>
    </div>
 
    <div class="slide">
-      <h1>belongs_to</h1>
-      <img src="img/belongsto1.png" />
-   </div>
-
-   <div class="slide">
-      <h1>belongs_to</h1>
-<pre>package Foo::Schema::<strong>Result::Author_Book</strong>;
-
-__PACKAGE__-&gt;belongs_to(
-   book =&gt;
-   'Foo::Schema::Result::Book', 'book_id'
-);
+      <h1>ResultSetColumn</h1>
+<pre>my $rsc = $schema-&gt;resultset('Book')-&gt;get_column('price');
+$rsc-&gt;min;
+$rsc-&gt;max;
+$rsc-&gt;sum;
 </pre>
    </div>
 
    <div class="slide">
-      <h1>same for Authors</h1>
-      <img src="img/authors.png" />
+      <h1>Aggregates</h1>
+<pre>my @res = $rs-&gt;search({}, {
+   select   =&gt; [qw(price genre), { max =&gt; price }, { avg =&gt; price }],
+   as       =&gt; [qw(price genre max_price avg_price)],
+   group_by =&gt; [qw(price genre)],
+});
+for (@res) {
+   say $_-&gt;price . ' ' . $_-&gt;genre;
+   say $_-&gt;get_column('max_price');
+   say $_-&gt;get_column('min_price');
+}</pre>
+      <ul class="incremental">
+         <li>Careful, get_column can basicaly mean THREE things</li>
+         <li>private for get what you should use an accessor for</li>
+         <li>public for what there is no accessor for</li>
+         <li>public for get resultset column (prev slide)</li>
+      </ul>
    </div>
 
    <div class="slide">
-      <h1>many_to_many</h1>
-      <img src="img/m2m.png" />
+      <h1>HRI</h1>
+<pre>$rs-&gt;search({}, {
+   result_class =&gt; 'DBIx::Class::ResultClass::HashRefInflator',
+});</pre>
+      <ul class="incremental">
+         <li>Easy on memory</li>
+         <li>Mega fast</li>
+         <li>Great for quick debugging</li>
+         <li>Great for performance tuning (we went from 2m to &lt; 3s)</li>
+      </ul>
    </div>
 
    <div class="slide">
-      <h1>many_to_many</h1>
-      <pre>package Foo::Schema::<strong>Result::Book</strong>;
-use base 'DBIx::Class::Core';
+      <h1>Subquery Support</h1>
+<pre>  my $inside_rs = $schema-&gt;resultset('Artist')-&gt;search({
+    name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
+});
 
-__PACKAGE__-&gt;many_to_many(
-   authors =&gt; 'author_and_books', 'author'
-);
-
-1;
-</pre>
-   </div>
-
-   <div class="slide">
-      <h1>many_to_many</h1>
-      <pre>package Foo::Schema::<strong>Result::Book</strong>;
-use base 'DBIx::Class::Core';
-
-__PACKAGE__-&gt;many_to_many(
-   authors <strong># Accessor name</strong>
-   =&gt; "author_and_books", <strong># has_many</strong>
-   'author' <strong># foreign relationship name</strong>
-);
-
-1;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>many_to_many</h1>
-      <pre>package Foo::Schema::Result::Author;
-use base 'DBIx::Class::Core';
-
-__PACKAGE__-&gt;many_to_many(
-   "books" <strong># Accessor Name</strong>
-   =&gt; "author_and_books", <strong># has_many accessor_name</strong>
-   'book' <strong># foreign relationship name</strong>
-);
-
-1;
-</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Using many_to_many</h1>
-      <pre>#!perl
-use Foo::Schema;
-my $schema    = Foo::Schema-&gt;connect(...);
-my $author_rs = $schema-&gt;resultset('Authors');
-my $author    = $author_rs-&gt;search({
-   name =&gt; 'Douglas Adams',
-})-&gt;single;
-$author-&gt;add_to_books({
-   title =&gt; 'A new book',
+my $rs = $schema-&gt;resultset('CD')-&gt;search({
+    artist_id =&gt; { -in =&gt; $inside_rs-&gt;get_column('id')-&gt;as_query },
 });</pre>
    </div>
 
    <div class="slide">
-      <h1>using many_to_many</h1>
-      <pre>my $author = $author_rs-&gt;search({
-   name =&gt; 'Douglas Adams',
-})-&gt;single;
-<strong>$author-&gt;add_to_books({
-   title =&gt; 'A new book',
-});</strong>
+      <h1>Bare SQL w/ Placeholders</h1>
+<pre>$rs-&gt;update({
+   price =&gt; \"price + $inc", # !!! SQL INJECTION VECTOR
+});
 
-# SELECT me.id, me.name FROM authors me
-#     WHERE ( name = ? ): 'Douglas Adams';
-# INSERT INTO books (title) VALUES (?): 'A new book';
-# INSERT INTO author_and_books (author, book)
-#     VALUES (?, ?): '5', '2';</pre>
+$rs-&gt;update({
+   price =&gt; \['price + ?', [inc =&gt; $inc]],
+});
+</pre>
    </div>
 
    <div class="slide">
-      <h1>using many_to_many</h1>
-      <pre>$author-&gt;add_to_books($book);
-
-$book-&gt;add_to_authors($author_1);
-$book-&gt;add_to_authors($author_2);</pre>
+      <h1>Questions?</h1>
    </div>
 
    <div class="slide">
-      <h1>errors</h1>
-      <p>Read them closely!</p>
+      <h1>END</h1>
    </div>
-
-   <div class="slide">
-      <h1>error messages</h1>
-<pre>DBIx::Class::Schema::Loader::connection(): Failed to load external
-class definition for 'Foo::Schema::Result::Authors': Can't locate object
-method "many_to_many" via package "Foo::Schema::Result::Author" at
-lib/Foo/Schema/Result/Authors.pm line 9.Compilation failed in require at
-/Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
-   </div>
-
-   <div class="slide">
-      <h1>error messages</h1>
-<pre>DBIx::Class::Schema::Loader::connection(): Failed to load external
-class definition for 'Foo::Schema::Result::Authors': Can't locate object
-method "many_to_many" via package "Foo::Schema::<strong>Result::Author</strong>" at
-lib/Foo/Schema/<strong>Result/Authors.pm</strong> line 9.Compilation failed in require at
-/Library/Perl/5.8.8/DBIx/Class/Schema/Loader/Base.pm line 292.</pre>
-   </div>
-
-   <div class="slide">
-      <h1>errors</h1>
-      <ul>
-         <li>Turn on debugging</li>
-         <li>Read error messages (sometimes useful!)</li>
-         <li>Check field names</li>
-         <li>Check package names</li>
-         <li>Check which database you are connected to (dev/test/live?) - repeat above</li>
-      </ul>
-   </div>
-
-   <div class="slide">
-      <h1>LOTS more Features</h1>
-      <ul>
-         <li>FilterColumn</li>
-         <li>Transactions</li>
-         <li>HashRefInflator</li>
-         <li>Subqueries</li>
-         <li>ResultSetColumn</li>
-         <li>Aggregate Queries</li>
-      </ul>
-   </div>
-
-   <div class="slide">
-      <h1>bonus slides!</h1>
-   </div>
-
-   <div class="slide">
-      <h1>Template Toolkit</h1>
-      <ul>
-         <li><pre>[% author.books.count %]</pre> not working?</li>
-         <li>TT all methods are called in list context</li>
-         <li><pre>[% author.books<strong>_rs</strong>.count %]</pre> scalar context</li>
-         <li><em>Available for all relationships</em></li>
-      </ul>
-   </div>
-
-   <div class="slide">
-      <h1>Catalyst</h1>
-      <pre>package Your::App::Model::<strong>Foo</strong>;
-use base qw(<strong>Catalyst::Model::Schema::Schema</strong>);
-
-use strict;
-use warnings;
-
-__PACKAGE__-&gt;config(
-  schema_class =&gt; '<strong>Foo::Schema</strong>',
-);
-
-1;</pre>
-   <p>Keep your Schema in a <em>separate</em> package from your Catalyst application</p>
-   </div>
-
-   <div class="slide">
-      <h1>Catalyst</h1>
-<pre>sub action_name : Local {
-  my ($self, $c) = @_;
-
-  my $schema = $c-&gt;model('Schema::Foo');
-  my $author_rs = $schema-&gt;resultset('Authors');
-
-}
-
-1;</pre>
-   </div>
-
 </div>
 </body>
 </html>
