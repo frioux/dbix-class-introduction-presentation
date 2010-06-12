@@ -324,7 +324,9 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
    <div class="slide">
       <h1>-&gt;deploy</h1>
       <p>Perl -&gt; DB</p>
-<pre>my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
+<pre>my $schema = Foo::Schema-&gt;connect(
+   $dsn, $user, $pass
+);
 $schema-&gt;deploy
 </pre>
 <p>See also: <a href="http://search.cpan.org/perldoc?DBIx::Class::DeploymentHandler">DBIx::Class::DeploymentHandler</a></p>
@@ -344,7 +346,9 @@ __PACKAGE__-&gt;loader_options({
 
 # elsewhere...
 
-my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
+my $schema = Foo::Schema-&gt;connect(
+   $dsn, $user, $pass
+);
 </pre>
    </div>
 
@@ -353,7 +357,7 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
       <p>Made for inserting lots of rows very quicky into database</p>
 <pre>$schema-&gt;populate([ Users =&gt;
    [qw( username password )],
-   [qw( frew &gt;=4char$  )],
+   [qw( frew     &gt;=4char$ )],
    [qw(      ...          )],
    [qw(      ...          )],
 );
@@ -372,7 +376,7 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
    address =&gt; {
       street =&gt; '123 Turtle Back Lane',
       state  =&gt; { abbreviation =&gt; 'ME' },
-      city   =&gt; { name =&gt; 'Lowell' },
+      city   =&gt; { name =&gt; 'Lowell'     },
    },
 });
 </pre>
@@ -394,13 +398,13 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
    <div class="slide">
       <h1>Extensible: DBIC::Helpers</h1>
       <ul class="incremental">
-         <li>DBIx::Class::Helper::ResultSet::IgnoreWantarray</li>
-         <li>DBIx::Class::Helper::ResultSet::Random</li>
-         <li>DBIx::Class::Helper::ResultSet::SetOperations</li>
-         <li>DBIx::Class::Helper::Row::JoinTable</li>
-         <li>DBIx::Class::Helper::Row::NumifyGet</li>
-         <li>DBIx::Class::Helper::Row::SubClass</li>
-         <li>DBIx::Class::Helper::Row::ToJSON</li>
+         <li>DBIC::Helper::ResultSet::IgnoreWantarray</li>
+         <li>DBIC::Helper::ResultSet::Random</li>
+         <li>DBIC::Helper::ResultSet::SetOperations</li>
+         <li>DBIC::Helper::Row::JoinTable</li>
+         <li>DBIC::Helper::Row::NumifyGet</li>
+         <li>DBIC::Helper::Row::SubClass</li>
+         <li>DBIC::Helper::Row::ToJSON</li>
       </ul>
    </div>
 
@@ -414,8 +418,9 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
    </div>
 
    <div class="slide">
-      <h1>Extensible: DBIx::Class::Schema::KiokuDB</h1>
+      <h1>Extensible: Kioku</h1>
       <ul class="incremental">
+         <li>DBIx::Class::Schema::KiokuDB</li>
          <li>Kioku is the new hotness</li>
          <li>Mix RDBMS with Object DB</li>
          <li>beta ( == sexy )</li>
@@ -451,21 +456,30 @@ my $schema = Foo::Schema-&gt;connect($dsn, $user, $pass);
 <pre>package MyApp::Schema::ResultSet::Book;
 use base 'DBIx::Class::ResultSet';
 sub good {
-   $_[0]-&gt;search({
-      rating =&gt; { '&gt;=' =&gt; 4 },
+   my $self = shift;
+   $self-&gt;search({
+      $self-&gt;current_source_alias .
+         '.rating' =&gt; { '&gt;=' =&gt; 4 },
    })
 };
 sub cheap {
-   $_[0]-&gt;search({
-      price =&gt; { '&lt;=' =&gt; 5}
+   my $self = shift;
+   $self-&gt;search({
+      $self-&gt;current_source_alias .
+         '.price' =&gt; { '&lt;=' =&gt; 5}
    })
 };
 # ...
 1;
       </pre>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSet method notes</h1>
       <ul class="incremental">
          <li>All searches should be ResultSet methods</li>
          <li>Name has obvious meaning</li>
+         <li>current_source_alias helps things to work no matter what</li>
       </ul>
    </div>
 
@@ -485,31 +499,30 @@ sub cheap {
 
    <div class="slide">
       <h1>search_related</h1>
-<pre>my @test_rs = ($schema-&gt;resultset('User')-&gt;search({'me.userid' =&gt; 'marial'})
+<pre>my $score = $schema-&gt;resultset('User')
+   -&gt;search({'me.userid' =&gt; 'frew'})
    -&gt;related_resultset('access')
    -&gt;related_resultset('mgmt')
-   -&gt;related_resultset('orders')-&gt;search({'orders.reporttype' =&gt; 0})
-   -&gt;related_resultset('shops')-&gt;search({'shops.status' =&gt; 'Completed', 'shops.datecompleted' =&gt; {-between =&gt; ['2009-10-01','2009-10-08']}})
-   -&gt;related_resultset('rpt_score')-&gt;get_column('raw_scores')-&gt;first);
+   -&gt;related_resultset('orders')
+   -&gt;telephone
+   -&gt;search_related( shops =&gt; {
+      'shops.datecompleted' =&gt; {
+         -between =&gt; ['2009-10-01','2009-10-08']
+      }
+   })-&gt;completed
+   -&gt;related_resultset('rpt_score')
+   -&gt;get_column('raw_scores')
+   -&gt;first;
 </pre>
-   </div>
-
-   <div class="slide">
-      <h1>related_resultset</h1>
-<pre>my @screens = $user-&gt;roles
-   -&gt;related_resultset('role_permissions')
-   -&gt;related_resultset('permission')
-   -&gt;related_resultset('permission_screens')
-   -&gt;related_resultset('screen')
-   -&gt;search(undef, { distinct =&gt; 1 })-&gt;all;</pre>
    </div>
 
    <div class="slide">
       <h1>bonus rel methods</h1>
 <pre>my $book = $author-&gt;create_related(
-  <strong>books</strong> =&gt; {
-   title =&gt; 'Another Discworld book',
-});
+   <strong>books</strong> =&gt; {
+      title =&gt; 'Another Discworld book',
+   }
+);
 
 my $book2 = $pratchett-&gt;add_to_<strong>books</strong>({
    title =&gt; 'MOAR Discworld book',
@@ -539,16 +552,20 @@ $schema-&gt;txn_commit;
       <h1>InflateColumn</h1>
 <pre>package Foo::Schema::Result::Book;
 use base 'DBIx::Class::Core';
+use DateTime::Format::MySQL;
 # Result code here
 __PACKAGE__-&gt;load_components('InflateColumn');
-use DateTime::Format::MySQL;
 __PACKAGE__-&gt;<strong>inflate_column</strong>(
    <strong>date_published</strong> =&gt; {
-      inflate =&gt; sub { DateTime::Format::MySQL-&gt;parse_date(shift) },
-      deflate =&gt; sub { shift-&gt;ymd},
+      inflate =&gt; sub {
+         DateTime::Format::MySQL-&gt;parse_date(
+            shift
+         )
+      },
+      deflate =&gt; sub { shift-&gt;ymd },
    },
 );
-# Automatic see: DBIx::Class::InflateColumn::DateTime</pre>
+# Automatic see: DBIC::InflateColumn::DateTime</pre>
    </div>
 
    <div class="slide">
@@ -559,8 +576,7 @@ $book-&gt;update;</pre>
 
    <div class="slide">
       <h1>InflateColumn: inflation</h1>
-<pre>my $date_published = $book-&gt;date_published;
-print $date_published-&gt;month_abbr;</pre>
+<pre>say $book-&gt;date_published-&gt;month_abbr;</pre>
 
 <strong><em>Nov</em></strong>
    </div>
@@ -581,12 +597,12 @@ __PACKAGE__-&gt;<strong>filter_column</strong>(
 
 sub to_metric   { $_[1] * .305 }
 sub to_imperial { $_[1] * 3.28 }
-# Automatic see: DBIx::Class::InflateColumn::DateTime</pre>
    </div>
 
    <div class="slide">
       <h1>ResultSetColumn</h1>
-<pre>my $rsc = $schema-&gt;resultset('Book')-&gt;get_column('price');
+<pre>my $rsc = $schema-&gt;resultset('Book')
+   -&gt;get_column('price');
 $rsc-&gt;min;
 $rsc-&gt;max;
 $rsc-&gt;sum;
@@ -596,8 +612,15 @@ $rsc-&gt;sum;
    <div class="slide">
       <h1>Aggregates</h1>
 <pre>my @res = $rs-&gt;search({}, {
-   select   =&gt; [qw(price genre), { max =&gt; price }, { avg =&gt; price }],
-   as       =&gt; [qw(price genre max_price avg_price)],
+   select   =&gt; [
+      'price',
+      'genre',
+      { max =&gt; price },
+      { avg =&gt; price },
+   ],
+   as       =&gt; [
+      qw(price genre max_price avg_price)
+   ],
    group_by =&gt; [qw(price genre)],
 });
 for (@res) {
@@ -605,6 +628,10 @@ for (@res) {
    say $_-&gt;get_column('max_price');
    say $_-&gt;get_column('min_price');
 }</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Aggregates Notes</h1>
       <ul class="incremental">
          <li>Careful, get_column can basicaly mean THREE things</li>
          <li>private for get what you should use an accessor for</li>
@@ -616,7 +643,8 @@ for (@res) {
    <div class="slide">
       <h1>HRI</h1>
 <pre>$rs-&gt;search({}, {
-   result_class =&gt; 'DBIx::Class::ResultClass::HashRefInflator',
+  result_class =&gt;
+    'DBIx::Class::ResultClass::HashRefInflator',
 });</pre>
       <ul class="incremental">
          <li>Easy on memory</li>
@@ -628,19 +656,21 @@ for (@res) {
 
    <div class="slide">
       <h1>Subquery Support</h1>
-<pre>  my $inside_rs = $schema-&gt;resultset('Artist')-&gt;search({
+<pre>my $inside_query = $schema-&gt;resultset('Artist')
+   -&gt;search({
     name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
-});
+})-&gt;get_column('id')-&gt;as_query;
 
 my $rs = $schema-&gt;resultset('CD')-&gt;search({
-    artist_id =&gt; { -in =&gt; $inside_rs-&gt;get_column('id')-&gt;as_query },
+    artist_id =&gt; { -in =&gt; $inside_query },
 });</pre>
    </div>
 
    <div class="slide">
       <h1>Bare SQL w/ Placeholders</h1>
 <pre>$rs-&gt;update({
-   price =&gt; \"price + $inc", # !!! SQL INJECTION VECTOR
+   # !!! SQL INJECTION VECTOR
+   price =&gt; \"price + $inc",
 });
 
 $rs-&gt;update({
