@@ -106,6 +106,9 @@
       <p>The purpose of this talk is to show you as many features of
       DBIx::Class in 40 minutes so that when you need to do something with
       it later you will know what's possible</p>
+      <ul class="incremental">
+         <li>Note: links in slides are so you can find docs for what I'm talking about later</li>
+      </ul>
    </div>
 
    <div class="slide">
@@ -138,7 +141,7 @@
    <div class="slide">
       <h1>Responsive Community</h1>
       <ul class="incremental">
-         <li>needed MSSQL Order by support, they helped me add support</li>
+         <li>needed MSSQL order-by support, they helped me add support</li>
          <li>generally very welcoming of people willing to help</li>
       </ul>
    </div>
@@ -179,7 +182,7 @@ $sth-&gt;execute(
 
    <div class="slide">
       <h1>DBIC: Create</h1>
-<pre>my $book = $book_rs-&gt;create({
+<pre>my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#create">create</a>({
    title     =&gt; 'A book title',
    author_id =&gt; $author_id,
 });</pre>
@@ -213,15 +216,15 @@ $sth-&gt;execute(
 
    <div class="slide">
       <h1>DBIC: Read</h1>
-<pre>my $book = $book_rs-&gt;find($book_id);
+<pre>my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#find">find</a>($book_id);
 
-my $book = $book_rs-&gt;search({
+my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#search">search</a>({
    title =&gt; 'A book title',
-}, { rows =&gt; 1 })-&gt;next;
+}, { rows =&gt; 1 })-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#next">next</a>;
 
 my @books = $book_rs-&gt;search({
    author =&gt; $author_id,
-})-&gt;all;</pre>
+})-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#all">all</a>;</pre>
       <ul class="incremental">
          <li>TMTOWTDI</li>
       </ul>
@@ -253,7 +256,7 @@ $update-&gt;execute(
 
    <div class="slide">
       <h1>DBIC: Update</h1>
-<pre>$book-&gt;update({
+<pre>$book-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Row#update">update</a>({
   title =&gt; 'New title',
 });</pre>
       <ul class="incremental">
@@ -273,7 +276,7 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
 
    <div class="slide">
       <h1>DBIC: Delete</h1>
-<pre>$book-&gt;delete;</pre>
+<pre>$book-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Row#delete">delete</a>;</pre>
    </div>
 
    <div class="slide">
@@ -293,8 +296,8 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
    <div class="slide">
       <h1>Convenience Methods</h1>
       <ul class="incremental">
-         <li>find_or_create</li>
-         <li>create_or_update</li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#find_or_create">find_or_create</a></li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#update_or_create">update_or_create</a></li>
       </ul>
    </div>
 
@@ -327,7 +330,7 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
 <pre>my $schema = Foo::Schema-&gt;connect(
    $dsn, $user, $pass
 );
-$schema-&gt;deploy
+$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#deploy">deploy</a>
 </pre>
 <p>See also: <a href="http://search.cpan.org/perldoc?DBIx::Class::DeploymentHandler">DBIx::Class::DeploymentHandler</a></p>
    </div>
@@ -337,8 +340,8 @@ $schema-&gt;deploy
       <p>DB -&gt; Perl</p>
 <pre>package Foo::Schema;
 use strict; use warnings;
-use base 'DBIx::Class::Schema::Loader';
-__PACKAGE__-&gt;loader_options({
+use base '<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema::Loader">DBIx::Class::Schema::Loader</a>';
+__PACKAGE__-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema::Loader::Base#CONSTRUCTOR_OPTIONS">loader_options</a>({
    naming =&gt; 'v7',
    debug  =&gt; $ENV{DBIC_TRACE},
 });
@@ -355,7 +358,7 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h1>Populate</h1>
       <p>Made for inserting lots of rows very quicky into database</p>
-<pre>$schema-&gt;populate([ Users =&gt;
+<pre>$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#populate">populate</a>([ Users =&gt;
    [qw( username password )],
    [qw( frew     &gt;=4char$ )],
    [qw(      ...          )],
@@ -370,7 +373,7 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h1>Multicreate</h1>
       <p>Create an object and all of it's related objects all at once</p>
-<pre>$schema-&gt;resultset('Author')-&gt;create({
+<pre>$schema-&gt;resultset('Author')-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#create">create</a>({
    name =&gt; 'Stephen King',
    books =&gt; [{ title =&gt; 'The Dark Tower' }],
    address =&gt; {
@@ -398,18 +401,18 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h1>Extensible: DBIC::Helpers</h1>
       <ul class="incremental">
-         <li>DBIC::Helper::ResultSet::IgnoreWantarray</li>
-         <li>DBIC::Helper::ResultSet::Random</li>
-         <li>DBIC::Helper::ResultSet::SetOperations</li>
-         <li>DBIC::Helper::Row::JoinTable</li>
-         <li>DBIC::Helper::Row::NumifyGet</li>
-         <li>DBIC::Helper::Row::SubClass</li>
-         <li>DBIC::Helper::Row::ToJSON</li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Helper::ResultSet::IgnoreWantarray">DBIC::Helper::ResultSet::IgnoreWantarray</a></li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Helper::ResultSet::Random">DBIC::Helper::ResultSet::Random</a></li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Helper::ResultSet::SetOperations">DBIC::Helper::ResultSet::SetOperations</a></li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Helper::ResultSet::JoinTable">DBIC::Helper::Row::JoinTable</a></li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Helper::ResultSet::NumifyGet">DBIC::Helper::Row::NumifyGet</a></li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Helper::ResultSet::SubClass">DBIC::Helper::Row::SubClass</a></li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Helper::ResultSet::ToJSON">DBIC::Helper::Row::ToJSON</a></li>
       </ul>
    </div>
 
    <div class="slide">
-      <h1>Extensible: DBIC::TimeStamp</h1>
+      <h1>Extensible: <a href="http://search.cpan.org/perldoc?DBIx::Class::TimeStamp">DBIC::TimeStamp</a></h1>
       <ul class="incremental">
          <li>Cross DB</li>
          <li>set_on_create</li>
@@ -420,7 +423,7 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h1>Extensible: Kioku</h1>
       <ul class="incremental">
-         <li>DBIx::Class::Schema::KiokuDB</li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Schema::KiokuDB">DBIx::Class::Schema::KiokuDB</a></li>
          <li>Kioku is the new hotness</li>
          <li>Mix RDBMS with Object DB</li>
          <li>beta ( == sexy )</li>
@@ -428,7 +431,7 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1>SQL::Abstract</h1>
+      <h1><a href="http://search.cpan.org/perldoc?SQL::Abstract">SQL::Abstract</a></h1>
 <pre>my $resultset = $book_rs-&gt;search({
    name =&gt; { -like =&gt; "%$nick%" },
 });</pre>
@@ -452,7 +455,7 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1>ResultSet methods</h1>
+      <h1><a href="http://search.cpan.org/perldoc?DBIx::Class::Manual::Cookbook#Predefined_searches">ResultSet methods</a></h1>
 <pre>package MyApp::Schema::ResultSet::Book;
 use base 'DBIx::Class::ResultSet';
 sub good {
@@ -479,7 +482,7 @@ sub cheap {
       <ul class="incremental">
          <li>All searches should be ResultSet methods</li>
          <li>Name has obvious meaning</li>
-         <li>current_source_alias helps things to work no matter what</li>
+         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#current_source_alias">current_source_alias</a> helps things to work no matter what</li>
       </ul>
    </div>
 
@@ -501,30 +504,30 @@ sub cheap {
       <h1>search_related</h1>
 <pre>my $score = $schema-&gt;resultset('User')
    -&gt;search({'me.userid' =&gt; 'frew'})
-   -&gt;related_resultset('access')
+   -&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#related_resultset">related_resultset</a>('access')
    -&gt;related_resultset('mgmt')
    -&gt;related_resultset('orders')
    -&gt;telephone
-   -&gt;search_related( shops =&gt; {
+   -&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#search_related">search_related</a>( shops =&gt; {
       'shops.datecompleted' =&gt; {
          -between =&gt; ['2009-10-01','2009-10-08']
       }
    })-&gt;completed
    -&gt;related_resultset('rpt_score')
-   -&gt;get_column('raw_scores')
+   -&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#get_column">get_column</a>('raw_scores')
    -&gt;first;
 </pre>
    </div>
 
    <div class="slide">
       <h1>bonus rel methods</h1>
-<pre>my $book = $author-&gt;create_related(
+<pre>my $book = $author-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship::Base#create_related">create_related</a>(
    <strong>books</strong> =&gt; {
       title =&gt; 'Another Discworld book',
    }
 );
 
-my $book2 = $pratchett-&gt;add_to_<strong>books</strong>({
+my $book2 = $pratchett-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship::Base#add_to_$rel">add_to_<strong>books</strong></a>({
    title =&gt; 'MOAR Discworld book',
 });</pre>
       <ul class="incremental">
@@ -534,17 +537,17 @@ my $book2 = $pratchett-&gt;add_to_<strong>books</strong>({
 
    <div class="slide">
       <h1>Excellent Transaction Support</h1>
-<pre>$schema-&gt;txn_do(sub {
+<pre>$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_do">txn_do</a>(sub {
    ...
 });
 
-my $guard = $schema-&gt;txn_scope_guard;
+my $guard = $schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_scope_guard">txn_scope_guard</a>;
 # ...
 $guard-&gt;commit;
 
-$schema-&gt;txn_begin; # &lt;-- low level
+$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_begin">txn_begin</a>; # &lt;-- low level
 # ...
-$schema-&gt;txn_commit;
+$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_commit">txn_commit</a>;
 </pre>
    </div>
 
@@ -554,8 +557,8 @@ $schema-&gt;txn_commit;
 use base 'DBIx::Class::Core';
 use DateTime::Format::MySQL;
 # Result code here
-__PACKAGE__-&gt;load_components('InflateColumn');
-__PACKAGE__-&gt;<strong>inflate_column</strong>(
+__PACKAGE__-&gt;load_components('<a href="http://search.cpan.org/perldoc?DBIx::Class::InflateColumn">InflateColumn</a>');
+__PACKAGE__-&gt;<strong><a href="http://search.cpan.org/perldoc?DBIx::Class::InflateColumn#inflate_column">inflate_column</a></strong>(
    <strong>date_published</strong> =&gt; {
       inflate =&gt; sub {
          DateTime::Format::MySQL-&gt;parse_date(
@@ -586,9 +589,9 @@ $book-&gt;update;</pre>
 <pre>package Foo::Schema::Result::Book;
 use base 'DBIx::Class::Core';
 # Result code here
-__PACKAGE__-&gt;load_components('FilterColumn');
+__PACKAGE__-&gt;load_components('<a href="http://search.cpan.org/perldoc?DBIx::Class::FilterColumn">FilterColumn</a>');
 
-__PACKAGE__-&gt;<strong>filter_column</strong>(
+__PACKAGE__-&gt;<strong><a href="http://search.cpan.org/perldoc?DBIx::Class::FilterColumn#filter_column">filter_column</a></strong>(
    <strong>length</strong> =&gt; {
       to_storage   =&gt; 'to_metric',
       from_storage =&gt; 'to_imperial',
@@ -600,7 +603,7 @@ sub to_imperial { $_[1] * 3.28 }
    </div>
 
    <div class="slide">
-      <h1>ResultSetColumn</h1>
+      <h1><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSetColumn">ResultSetColumn</a></h1>
 <pre>my $rsc = $schema-&gt;resultset('Book')
    -&gt;get_column('price');
 $rsc-&gt;min;
@@ -612,16 +615,16 @@ $rsc-&gt;sum;
    <div class="slide">
       <h1>Aggregates</h1>
 <pre>my @res = $rs-&gt;search({}, {
-   select   =&gt; [
+   <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#select">select</a>   =&gt; [
       'price',
       'genre',
       { max =&gt; price },
       { avg =&gt; price },
    ],
-   as       =&gt; [
+   <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#as">as</a>       =&gt; [
       qw(price genre max_price avg_price)
    ],
-   group_by =&gt; [qw(price genre)],
+   <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#group_by">group_by</a> =&gt; [qw(price genre)],
 });
 for (@res) {
    say $_-&gt;price . ' ' . $_-&gt;genre;
@@ -643,8 +646,8 @@ for (@res) {
    <div class="slide">
       <h1>HRI</h1>
 <pre>$rs-&gt;search({}, {
-  result_class =&gt;
-    'DBIx::Class::ResultClass::HashRefInflator',
+  <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#result_class">result_class</a> =&gt;
+    '<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultClass::HashRefInflator">DBIx::Class::ResultClass::HashRefInflator</a>',
 });</pre>
       <ul class="incremental">
          <li>Easy on memory</li>
@@ -655,7 +658,7 @@ for (@res) {
    </div>
 
    <div class="slide">
-      <h1>Subquery Support</h1>
+      <h1><a href="http://search.cpan.org/perldoc?DBIx::Class::Manual::Cookbook#Subqueries">Subquery</a> Support</h1>
 <pre>my $inside_query = $schema-&gt;resultset('Artist')
    -&gt;search({
     name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
@@ -667,7 +670,7 @@ my $rs = $schema-&gt;resultset('CD')-&gt;search({
    </div>
 
    <div class="slide">
-      <h1>Bare SQL w/ Placeholders</h1>
+      <h1><a href="http://search.cpan.org/perldoc?SQL::Abstract#Literal_SQL_with_placeholders_and_bind_values_(subqueries)">Bare SQL w/ Placeholders</a></h1>
 <pre>$rs-&gt;update({
    # !!! SQL INJECTION VECTOR
    price =&gt; \"price + $inc",
