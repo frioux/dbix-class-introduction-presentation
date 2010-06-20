@@ -83,22 +83,19 @@
 
    <div class="slide">
       <h1>What's up guys?</h1>
-      <div class="notes">
-         <ul>
-            <li>How many people have used any ORM?<ul>
-               <li>In Perl?<ul>
-                  <li>DBIC?</li>
-                  <li>Class::DBI?</li>
-                  <li>Rose::DB?</li>
-                  <li>Fey?</li>
-                  <li>Others?</li>
-               </ul></li>
-               <li>AR?</li>
-               <li>DataMapper?</li>
-               <li>(N)Hibernate?</li>
+      <ul class="incremental">
+         <li>How many people have used any ORM?</li><ul class="incremental">
+            <li>In Perl?<ul class="incremental">
+               <li>DBIC?</li>
+               <li>Class::DBI?</li>
+               <li>Rose::DB?</li>
+               <li>Fey?</li>
+               <li>Others?</li>
             </ul></li>
-         </ul>
-      </div>
+            <li>AR?</li>
+            <li>(N)Hibernate?</li>
+         </ul></li>
+      </ul>
    </div>
 
    <div class="slide">
@@ -200,12 +197,9 @@ $sth-&gt;execute(
    authors.name as author_name
    FROM books, authors
    WHERE books.author = authors.id
-');</pre>
-   </div>
+');
 
-   <div class="slide">
-      <h1>SQL: Read</h1>
-<pre>while( my $book = $sth-&gt;fetchrow_hashref() ) {
+while( my $book = $sth-&gt;fetchrow_hashref() ) {
   print 'Author of '
      . $book-&gt;{title}
      . ' is '
@@ -224,21 +218,19 @@ my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Res
 
 my @books = $book_rs-&gt;search({
    author =&gt; $author_id,
-})-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#all">all</a>;</pre>
-      <ul class="incremental">
-         <li>TMTOWTDI</li>
-      </ul>
-   </div>
+})-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#all">all</a>;
 
-   <div class="slide">
-      <h1>DBIC: Read</h1>
-<pre>while( my $book = $books_rs-&gt;next ) {
+while( my $book = $books_rs-&gt;next ) {
  print 'Author of '
     . $book-&gt;title
     . ' is '
     . $book-&gt;author-&gt;name
     . "\n";
-}</pre>
+}
+</pre>
+      <ul class="incremental">
+         <li>TMTOWTDI</li>
+      </ul>
    </div>
 
    <div class="slide">
@@ -606,6 +598,8 @@ sub to_imperial { $_[1] * 3.28 }
       <h1><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSetColumn">ResultSetColumn</a></h1>
 <pre>my $rsc = $schema-&gt;resultset('Book')
    -&gt;get_column('price');
+$rsc-&gt;first;
+$rsc-&gt;all;
 $rsc-&gt;min;
 $rsc-&gt;max;
 $rsc-&gt;sum;
