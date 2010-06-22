@@ -281,6 +281,33 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
    </div>
 
    <div class="slide">
+      <h1>SQL: Search</h1>
+<pre>my $sth = $dbh-&gt;prepare('
+   SELECT title,
+   authors.name as author_name
+   FROM books
+   WHERE books.name LIKE "%monte cristo%" AND
+   books.topic = "jailbreak"
+');
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>DBIC: Search</h1>
+<pre>
+my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#search">search</a>({
+   'me.name'  =&gt; { -like =&gt; '%monte cristo%' },
+   'me.topic' =&gt; 'jailbreak',
+})-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#next">next</a>;
+</pre>
+      <ul class="incremental">
+         <li><a href="http://search.cpan.org/perldoc?SQL::Abstract">SQL::Abstract</a></li>
+         <li>(kinda) introspectible</li>
+         <li>Prettier than SQL</li>
+      </ul>
+   </div>
+
+   <div class="slide">
       <h1>OO Overidability</h1>
       <ul class="incremental">
          <li>Override new if you want to do validation</li>
@@ -428,17 +455,6 @@ my $schema = Foo::Schema-&gt;connect(
          <li>Kioku is the new hotness</li>
          <li>Mix RDBMS with Object DB</li>
          <li>beta ( == sexy )</li>
-      </ul>
-   </div>
-
-   <div class="slide">
-      <h1><a href="http://search.cpan.org/perldoc?SQL::Abstract">SQL::Abstract</a></h1>
-<pre>my $resultset = $book_rs-&gt;search({
-   name =&gt; { -like =&gt; "%$nick%" },
-});</pre>
-      <ul class="incremental">
-         <li>(kinda) introspectible</li>
-         <li>Prettier than SQL</li>
       </ul>
    </div>
 
