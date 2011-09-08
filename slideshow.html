@@ -207,6 +207,36 @@ my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultS
    <div class="slide">
       <h1>EXTENDED RELATIONSHIPS</h1>
       <a href="https://metacpan.org/module/DBIx::Class::Relationship::Base#SYNOPSIS">See here</a>
+<pre> __PACKAGE__-&gt;belongs_to(
+  output_device =&gt; 'My::Schema::Result::OutputDevice',
+  sub {
+    my $args = shift;
+
+    my $him = $args-&gt;{foreign_alias};
+    my $me  = $args-&gt;{self_alias};
+    my $self = $args-&gt;{self_rowobj};
+    my $shared = { "$him.shared" =&gt; [qw(Y X)] };
+    return ({
+      -and =&gt; [
+        [
+          { "$him.user" =&gt; { -ident =&gt; "$me.user" } },
+          $shared,
+        ],
+        { "$him.phone" =&gt; { -ident =&gt; "$me.phone" } },
+      ]
+    },
+    $self &amp;&amp; {
+      -and =&gt; [
+        [
+          { "$him.user" =&gt; $self-&gt;user },
+          $shared,
+        ],
+        { "$him.phone" =&gt; $self-&gt;phone },
+      ]
+    });
+  },
+);</pre>
+
    </div>
 
    <div class="slide">
@@ -290,14 +320,57 @@ my $schema = Foo::Schema-&gt;connect(
 
    <div class="slide">
       <h1><a href="http://beta.metacpan.org/module/DBIx::Class::TimeStamp">::TimeStamp</a></h1>
+      <p>USE THIS for any kind of timestamp (set on create or set on update)</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::EncodedColumn">::EncodedColumn</a<</h1>
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::EncodedColumn">::EncodedColumn</a></h1>
+      <p>USE THIS for password columns</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::IgnoreWantarray">::Helper::ResultSet::IgnoreWantarray</a></h1>
+      <p>USE THIS for less surprising resultsets (must call -&gt;all)</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::OnColumnChange">::Helper::Row::OnColumnChange</a></h1>
+      <p>USE THIS to do something when a value changes (per column)</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SetOperations">::Helper::ResultSet::SetOperations</a></h1>
+      <p>USE THIS to use UNION and other set ops with DBIC</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM">::Helper::Row::RelationshipDWIM</a></h1>
+      <p>USE THIS to avoid carpel tunnel (has_many cars =&gt; 'Cars', ...)</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::StorageValues">::Helper::Row::StorageValues</a></h1>
+      <p>USE THIS to keep track of what's in the DB before you call update and after you use an accessor</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::SubClass">::Helper::Row::SubClass</a></h1>
+      <p>USE THIS to subclass parts of your schema (deprecated by new versions of Class::C3::Componentised)</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::ToJSON">::Helper::Row::ToJSON</a></h1>
+      <p>USE THIS to generate a sensible TO_JSON method</p>
    </div>
 
    <div class="slide">
       <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Candy">::Candy</a></h1>
+      <p>Use this to avoid carpel tunnel (no more __PACKAGE__)</p>
+   </div>
+
+   <div class="slide">
+      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::ResultClassDWIM">::Helper::ResultSet::ResultClassDWIM</a></h1>
+      <p>Use this to avoid carpel tunnel ( result_class =&gt; '::HRI' )</p>
    </div>
 
    <div class="slide">
@@ -305,43 +378,11 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::IgnoreWantarray">::Helper::ResultSet::IgnoreWantarray</a></h1>
-   </div>
-
-   <div class="slide">
       <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::Random">::Helper::ResultSet::Random</a></h1>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::ResultClassDWIM">::Helper::ResultSet::ResultClassDWIM</a></h1>
-   </div>
-
-   <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SetOperations">::Helper::ResultSet::SetOperations</a></h1>
-   </div>
-
-   <div class="slide">
       <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h1>
-   </div>
-
-   <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::OnColumnChange">::Helper::Row::OnColumnChange</a></h1>
-   </div>
-
-   <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM">::Helper::Row::RelationshipDWIM</a></h1>
-   </div>
-
-   <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::StorageValues">::Helper::Row::StorageValues</a></h1>
-   </div>
-
-   <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::SubClass">::Helper::Row::SubClass</a></h1>
-   </div>
-
-   <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::ToJSON">::Helper::Row::ToJSON</a></h1>
    </div>
 
    <div class="slide">
