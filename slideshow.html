@@ -89,99 +89,11 @@
    </div>
 
    <div class="slide">
-      <h1>What's up guys?</h1>
-      <ul class="incremental">
-         <li>How many people have used any ORM?</li><ul class="incremental">
-            <li>In Perl?<ul class="incremental">
-               <li>DBIC?</li>
-               <li>Class::DBI?</li>
-               <li>Rose::DB?</li>
-               <li>Fey::ORM?</li>
-               <li>Others?</li>
-            </ul></li>
-            <li>AR?</li>
-            <li>(N)Hibernate?</li>
-         </ul></li>
-      </ul>
-   </div>
-
-   <div class="slide">
       <h1>Purpose</h1>
-      <p>The purpose of this talk is to show you as many features of
-      DBIx::Class in 40 minutes so that when you need to do something with
-      it later you will know what's possible</p>
+      <p>The purpose of this talk is to help you learn or remember the advanced features of DBIx::Class you may have forgotten about.</p>
       <ul class="incremental">
          <li>Note: links in slides are so you can find docs for what I'm talking about later</li>
       </ul>
-   </div>
-
-   <div class="slide">
-      <h1>DBIx::Class?</h1>
-      <ul>
-         <li>ORM (object relational mapper)</li>
-         <li>SQL &lt;-&gt; OO (using objects instead of SQL)</li>
-         <li>There are many ORMs, DBIx::Class just happens to be the best in Perl (personal opinion)</li>
-      </ul>
-   </div>
-
-   <div class="slide">
-      <h1>Meta</h1>
-      <p>These are reasons that are not technical or inherent to
-      the code of DBIC, but are totally awesome things about it.</p>
-   </div>
-
-   <div class="slide">
-      <h1>Large Community</h1>
-      <p>Currently there are 88 people listed as contributors to DBIC.  That
-      ranges from documentation help, to test help, to added features,
-      to entire database support.</p>
-   </div>
-
-   <div class="slide">
-      <h1>Active Community</h1>
-      <p>Currently (June 9, 2010) 6 active branches (commited to in the last two weeks) in git.  Last release (0.08122) had 14 new features, and 16 bug fixes.  Of course that <a href="http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=dbsrgits/DBIx-Class.git;a=blob;f=Changes">ebbs and flows</a>.</p>
-   </div>
-
-   <div class="slide">
-      <h1>Responsive Community</h1>
-      <ul class="incremental">
-         <li>needed MSSQL order-by support, they helped me add support</li>
-         <li>generally very welcoming of people willing to help</li>
-      </ul>
-   </div>
-
-   <div class="slide">
-      <h1>General ORM</h1>
-      <p>These are things that are in most other ORMs, but are still reasons
-      to use DBIC over raw SQL.</p>
-   </div>
-
-   <div class="slide">
-      <h1>Cross DB</h1>
-      <p>The vast majority of code should run on all databases without needing tweaking</p>
-   </div>
-
-   <div class="slide">
-      <h1>Basic CRUD</h1>
-      <ul class="incremental">
-         <li><strong>C</strong> - Create</li>
-         <li><strong>R</strong> - Read</li>
-         <li><strong>U</strong> - Update</li>
-         <li><strong>D</strong> - Delete</li>
-      </ul>
-   </div>
-
-   <div class="slide">
-      <h1>SQL: Create</h1>
-<pre>my $sth = $dbh-&gt;prepare('
-   INSERT INTO books
-   (title, author_id)
-   values (?,?)
-');
-
-$sth-&gt;execute(
-  'A book title', $author_id
-);</pre>
    </div>
 
    <div class="slide">
@@ -195,24 +107,6 @@ $sth-&gt;execute(
          <li>Automatically gets autoincremented id for you</li>
          <li>Transparently uses INSERT ... RETURNING for databases that support it</li>
       </ul>
-   </div>
-
-   <div class="slide">
-      <h1>SQL: Read</h1>
-<pre>my $sth = $dbh-&gt;prepare('
-   SELECT title,
-   authors.name as author_name
-   FROM books, authors
-   WHERE books.author = authors.id
-');
-
-while( my $book = $sth-&gt;fetchrow_hashref() ) {
-  print 'Author of '
-     . $book-&gt;{title}
-     . ' is '
-     . $book-&gt;{author_name}
-     . "\n";
-}</pre>
    </div>
 
    <div class="slide">
@@ -241,19 +135,6 @@ while( my $book = $books_rs-&gt;next ) {
    </div>
 
    <div class="slide">
-      <h1>SQL: Update</h1>
-<pre>my $update = $dbh-&gt;prepare('
-   UPDATE books
-   SET title = ?
-   WHERE id = ?
-');
-
-$update-&gt;execute(
-  'New title',<strong>$book_id</strong>
-);</pre>
-   </div>
-
-   <div class="slide">
       <h1>DBIC: Update</h1>
 <pre>$book-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Row#update">update</a>({
   title =&gt; 'New title',
@@ -264,30 +145,8 @@ $update-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>SQL: Delete</h1>
-<pre>my $delete = $dbh-&gt;prepare('
-   DELETE FROM books
-   WHERE id = ?
-');
-
-$delete-&gt;execute(<strong>$book_id</strong>);</pre>
-   </div>
-
-   <div class="slide">
       <h1>DBIC: Delete</h1>
 <pre>$book-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Row#delete">delete</a>;</pre>
-   </div>
-
-   <div class="slide">
-      <h1>SQL: Search</h1>
-<pre>my $sth = $dbh-&gt;prepare('
-   SELECT title,
-   authors.name as author_name
-   FROM books
-   WHERE books.name LIKE "%monte cristo%" AND
-   books.topic = "jailbreak"
-');
-</pre>
    </div>
 
    <div class="slide">
