@@ -98,7 +98,7 @@
 
    <div class="slide">
       <h1>DBIC: Create</h1>
-<pre>my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#create">create</a>({
+<pre>my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#create">create</a>({
    title     =&gt; 'A book title',
    author_id =&gt; $author_id,
 });</pre>
@@ -111,15 +111,15 @@
 
    <div class="slide">
       <h1>DBIC: Read</h1>
-<pre>my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#find">find</a>($book_id);
+<pre>my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#find">find</a>($book_id);
 
-my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#search">search</a>({
+my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#search">search</a>({
    title =&gt; 'A book title',
-}, { rows =&gt; 1 })-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#next">next</a>;
+}, { rows =&gt; 1 })-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#next">next</a>;
 
 my @books = $book_rs-&gt;search({
    author =&gt; $author_id,
-})-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#all">all</a>;
+})-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#all">all</a>;
 
 while( my $book = $books_rs-&gt;next ) {
  print 'Author of '
@@ -136,7 +136,7 @@ while( my $book = $books_rs-&gt;next ) {
 
    <div class="slide">
       <h1>DBIC: Update</h1>
-<pre>$book-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Row#update">update</a>({
+<pre>$book-&gt;<a href="http://metacpan.org/module/DBIx::Class::Row#update">update</a>({
   title =&gt; 'New title',
 });</pre>
       <ul class="incremental">
@@ -146,19 +146,19 @@ while( my $book = $books_rs-&gt;next ) {
 
    <div class="slide">
       <h1>DBIC: Delete</h1>
-<pre>$book-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Row#delete">delete</a>;</pre>
+<pre>$book-&gt;<a href="http://metacpan.org/module/DBIx::Class::Row#delete">delete</a>;</pre>
    </div>
 
    <div class="slide">
       <h1>DBIC: Search</h1>
 <pre>
-my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#search">search</a>({
+my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#search">search</a>({
    'me.name'  =&gt; { -like =&gt; '%monte cristo%' },
    'me.topic' =&gt; 'jailbreak',
-})-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#next">next</a>;
+})-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#next">next</a>;
 </pre>
       <ul class="incremental">
-         <li><a href="http://search.cpan.org/perldoc?SQL::Abstract">SQL::Abstract</a></li>
+         <li><a href="http://metacpan.org/module/SQL::Abstract">SQL::Abstract</a></li>
          <li>(kinda) introspectible</li>
          <li>Prettier than SQL</li>
       </ul>
@@ -181,8 +181,8 @@ my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Res
    <div class="slide">
       <h1>Convenience Methods</h1>
       <ul class="incremental">
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#find_or_create">find_or_create</a></li>
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#update_or_create">update_or_create</a></li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::ResultSet#find_or_create">find_or_create</a></li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::ResultSet#update_or_create">update_or_create</a></li>
       </ul>
    </div>
 
@@ -195,11 +195,11 @@ my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Res
    <div class="slide">
       <h1>RELATIONSHIPS</h1>
       <ul class="incremental">
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship#belongs_to">belongs_to</a></li>
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship#has_many">has_many</a></li>
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship#might_have">might_have</a></li>
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship#has_one">has_one</a></li>
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship#many_to_many">many_to_many</a> (technically not a relationship)</li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::Relationship#belongs_to">belongs_to</a></li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::Relationship#has_many">has_many</a></li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::Relationship#might_have">might_have</a></li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::Relationship#has_one">has_one</a></li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::Relationship#many_to_many">many_to_many</a> (technically not a relationship)</li>
          <li>SET AND FORGET</li>
       </ul>
    </div>
@@ -215,9 +215,9 @@ my $book = $book_rs-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Res
 <pre>my $schema = Foo::Schema-&gt;connect(
    $dsn, $user, $pass
 );
-$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#deploy">deploy</a>
+$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#deploy">deploy</a>
 </pre>
-<p>See also: <a href="http://search.cpan.org/perldoc?DBIx::Class::DeploymentHandler">DBIx::Class::DeploymentHandler</a></p>
+<p>See also: <a href="http://metacpan.org/module/DBIx::Class::DeploymentHandler">DBIx::Class::DeploymentHandler</a></p>
    </div>
 
    <div class="slide">
@@ -225,8 +225,8 @@ $schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#deploy">
       <p>DB -&gt; Perl</p>
 <pre>package Foo::Schema;
 use strict; use warnings;
-use base '<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema::Loader">DBIx::Class::Schema::Loader</a>';
-__PACKAGE__-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema::Loader::Base#CONSTRUCTOR_OPTIONS">loader_options</a>({
+use base '<a href="http://metacpan.org/module/DBIx::Class::Schema::Loader">DBIx::Class::Schema::Loader</a>';
+__PACKAGE__-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema::Loader::Base#CONSTRUCTOR_OPTIONS">loader_options</a>({
    naming =&gt; 'v7',
    debug  =&gt; $ENV{DBIC_TRACE},
 });
@@ -243,7 +243,7 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h1>Populate</h1>
       <p>Made for inserting lots of rows very quicky into database</p>
-<pre>$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#populate">populate</a>([ Users =&gt;
+<pre>$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#populate">populate</a>([ Users =&gt;
    [qw( username password )],
    [qw( frew     &gt;=4char$ )],
    [qw(      ...          )],
@@ -258,7 +258,7 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h1>Multicreate</h1>
       <p>Create an object and all of it's related objects all at once</p>
-<pre>$schema-&gt;resultset('Author')-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#create">create</a>({
+<pre>$schema-&gt;resultset('Author')-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#create">create</a>({
    name =&gt; 'Stephen King',
    books =&gt; [{ title =&gt; 'The Dark Tower' }],
    address =&gt; {
@@ -347,7 +347,7 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h1>Extensible: Kioku</h1>
       <ul class="incremental">
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::Schema::KiokuDB">DBIx::Class::Schema::KiokuDB</a></li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::Schema::KiokuDB">DBIx::Class::Schema::KiokuDB</a></li>
          <li>Kioku is the new hotness</li>
          <li>Mix RDBMS with Object DB</li>
          <li>beta ( == sexy )</li>
@@ -368,7 +368,7 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1><a href="http://search.cpan.org/perldoc?DBIx::Class::Manual::Cookbook#Predefined_searches">ResultSet methods</a></h1>
+      <h1><a href="http://metacpan.org/module/DBIx::Class::Manual::Cookbook#Predefined_searches">ResultSet methods</a></h1>
 <pre>package MyApp::Schema::ResultSet::Book;
 use base 'DBIx::Class::ResultSet';
 sub good {
@@ -395,7 +395,7 @@ sub cheap {
       <ul class="incremental">
          <li>All searches should be ResultSet methods</li>
          <li>Name has obvious meaning</li>
-         <li><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#current_source_alias">current_source_alias</a> helps things to work no matter what</li>
+         <li><a href="http://metacpan.org/module/DBIx::Class::ResultSet#current_source_alias">current_source_alias</a> helps things to work no matter what</li>
       </ul>
    </div>
 
@@ -417,30 +417,30 @@ sub cheap {
       <h1>search_related</h1>
 <pre>my $score = $schema-&gt;resultset('User')
    -&gt;search({'me.userid' =&gt; 'frew'})
-   -&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#related_resultset">related_resultset</a>('access')
+   -&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#related_resultset">related_resultset</a>('access')
    -&gt;related_resultset('mgmt')
    -&gt;related_resultset('orders')
    -&gt;telephone
-   -&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#search_related">search_related</a>( shops =&gt; {
+   -&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#search_related">search_related</a>( shops =&gt; {
       'shops.datecompleted' =&gt; {
          -between =&gt; ['2009-10-01','2009-10-08']
       }
    })-&gt;completed
    -&gt;related_resultset('rpt_score')
-   -&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#get_column">get_column</a>('raw_scores')
+   -&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#get_column">get_column</a>('raw_scores')
    -&gt;first;
 </pre>
    </div>
 
    <div class="slide">
       <h1>bonus rel methods</h1>
-<pre>my $book = $author-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship::Base#create_related">create_related</a>(
+<pre>my $book = $author-&gt;<a href="http://metacpan.org/module/DBIx::Class::Relationship::Base#create_related">create_related</a>(
    <strong>books</strong> =&gt; {
       title =&gt; 'Another Discworld book',
    }
 );
 
-my $book2 = $pratchett-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Relationship::Base#add_to_$rel">add_to_<strong>books</strong></a>({
+my $book2 = $pratchett-&gt;<a href="http://metacpan.org/module/DBIx::Class::Relationship::Base#add_to_$rel">add_to_<strong>books</strong></a>({
    title =&gt; 'MOAR Discworld book',
 });</pre>
       <ul class="incremental">
@@ -450,17 +450,17 @@ my $book2 = $pratchett-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::
 
    <div class="slide">
       <h1>Excellent Transaction Support</h1>
-<pre>$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_do">txn_do</a>(sub {
+<pre>$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#txn_do">txn_do</a>(sub {
    ...
 });
 
-my $guard = $schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_scope_guard">txn_scope_guard</a>;
+my $guard = $schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#txn_scope_guard">txn_scope_guard</a>;
 # ...
 $guard-&gt;commit;
 
-$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_begin">txn_begin</a>; # &lt;-- low level
+$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#txn_begin">txn_begin</a>; # &lt;-- low level
 # ...
-$schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_commit">txn_commit</a>;
+$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#txn_commit">txn_commit</a>;
 </pre>
    </div>
 
@@ -470,8 +470,8 @@ $schema-&gt;<a href="http://search.cpan.org/perldoc?DBIx::Class::Schema#txn_comm
 use base 'DBIx::Class::Core';
 use DateTime::Format::MySQL;
 # Result code here
-__PACKAGE__-&gt;load_components('<a href="http://search.cpan.org/perldoc?DBIx::Class::InflateColumn">InflateColumn</a>');
-__PACKAGE__-&gt;<strong><a href="http://search.cpan.org/perldoc?DBIx::Class::InflateColumn#inflate_column">inflate_column</a></strong>(
+__PACKAGE__-&gt;load_components('<a href="http://metacpan.org/module/DBIx::Class::InflateColumn">InflateColumn</a>');
+__PACKAGE__-&gt;<strong><a href="http://metacpan.org/module/DBIx::Class::InflateColumn#inflate_column">inflate_column</a></strong>(
    <strong>date_published</strong> =&gt; {
       inflate =&gt; sub {
          DateTime::Format::MySQL-&gt;parse_date(
@@ -502,9 +502,9 @@ $book-&gt;update;</pre>
 <pre>package Foo::Schema::Result::Book;
 use base 'DBIx::Class::Core';
 # Result code here
-__PACKAGE__-&gt;load_components('<a href="http://search.cpan.org/perldoc?DBIx::Class::FilterColumn">FilterColumn</a>');
+__PACKAGE__-&gt;load_components('<a href="http://metacpan.org/module/DBIx::Class::FilterColumn">FilterColumn</a>');
 
-__PACKAGE__-&gt;<strong><a href="http://search.cpan.org/perldoc?DBIx::Class::FilterColumn#filter_column">filter_column</a></strong>(
+__PACKAGE__-&gt;<strong><a href="http://metacpan.org/module/DBIx::Class::FilterColumn#filter_column">filter_column</a></strong>(
    <strong>length</strong> =&gt; {
       to_storage   =&gt; 'to_metric',
       from_storage =&gt; 'to_imperial',
@@ -516,7 +516,7 @@ sub to_imperial { $_[1] * 3.28 }
    </div>
 
    <div class="slide">
-      <h1><a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSetColumn">ResultSetColumn</a></h1>
+      <h1><a href="http://metacpan.org/module/DBIx::Class::ResultSetColumn">ResultSetColumn</a></h1>
 <pre>my $rsc = $schema-&gt;resultset('Book')
    -&gt;get_column('price');
 $rsc-&gt;first;
@@ -530,16 +530,16 @@ $rsc-&gt;sum;
    <div class="slide">
       <h1>Aggregates</h1>
 <pre>my @res = $rs-&gt;search({}, {
-   <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#select">select</a>   =&gt; [
+   <a href="http://metacpan.org/module/DBIx::Class::ResultSet#select">select</a>   =&gt; [
       'price',
       'genre',
       { max =&gt; price },
       { avg =&gt; price },
    ],
-   <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#as">as</a>       =&gt; [
+   <a href="http://metacpan.org/module/DBIx::Class::ResultSet#as">as</a>       =&gt; [
       qw(price genre max_price avg_price)
    ],
-   <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#group_by">group_by</a> =&gt; [qw(price genre)],
+   <a href="http://metacpan.org/module/DBIx::Class::ResultSet#group_by">group_by</a> =&gt; [qw(price genre)],
 });
 for (@res) {
    say $_-&gt;price . ' ' . $_-&gt;genre;
@@ -561,8 +561,8 @@ for (@res) {
    <div class="slide">
       <h1>HRI</h1>
 <pre>$rs-&gt;search({}, {
-  <a href="http://search.cpan.org/perldoc?DBIx::Class::ResultSet#result_class">result_class</a> =&gt;
-    '<a href="http://search.cpan.org/perldoc?DBIx::Class::ResultClass::HashRefInflator">DBIx::Class::ResultClass::HashRefInflator</a>',
+  <a href="http://metacpan.org/module/DBIx::Class::ResultSet#result_class">result_class</a> =&gt;
+    '<a href="http://metacpan.org/module/DBIx::Class::ResultClass::HashRefInflator">DBIx::Class::ResultClass::HashRefInflator</a>',
 });</pre>
       <ul class="incremental">
          <li>Easy on memory</li>
@@ -573,7 +573,7 @@ for (@res) {
    </div>
 
    <div class="slide">
-      <h1><a href="http://search.cpan.org/perldoc?DBIx::Class::Manual::Cookbook#Subqueries">Subquery</a> Support</h1>
+      <h1><a href="http://metacpan.org/module/DBIx::Class::Manual::Cookbook#Subqueries">Subquery</a> Support</h1>
 <pre>my $inside_query = $schema-&gt;resultset('Artist')
    -&gt;search({
     name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
@@ -585,7 +585,7 @@ my $rs = $schema-&gt;resultset('CD')-&gt;search({
    </div>
 
    <div class="slide">
-      <h1><a href="http://search.cpan.org/perldoc?SQL::Abstract#Literal_SQL_with_placeholders_and_bind_values_(subqueries)">Bare SQL w/ Placeholders</a></h1>
+      <h1><a href="http://metacpan.org/module/SQL::Abstract#Literal_SQL_with_placeholders_and_bind_values_(subqueries)">Bare SQL w/ Placeholders</a></h1>
 <pre>$rs-&gt;update({
    # !!! SQL INJECTION VECTOR
    price =&gt; \"price + $inc",
