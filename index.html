@@ -1,72 +1,31 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-<title>DBIx::Class (aka DBIC)</title>
-<!-- metadata -->
-<meta name="contributor" content="youcan[64]netzgesta[46]de" />
-<meta name="publisher" content="s5.netzgesta.de" />
-<meta name="description" content="S5 1.3 is a very flexible and lightweight slide show system available for anyone to use (including transitions and scalable fonts and images)" />
-<meta name="keywords" content="S5, version 1.3, slide show, presentation-mode, projection-mode, powerpoint-like, scala-like, keynote-like, incremental display, scalable fonts, scalable images, transitions, notes, osf, xoxo, css, javascript, xhtml, public domain" />
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<meta name="generator" content="S5" />
-<meta name="version" content="1" />
-<meta name="subject" content="DBIx::Class" />
-<meta name="author" content="See first slide" />
-<meta name="company" content="N/A" />
-<meta name="robots" content="index, follow" />
-<meta name="revisit-after" content="7 days" />
-<!-- meta additionally -->
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Script-Type" content="text/javascript" />
-<meta http-equiv="Content-Style-Type" content="text/css" /><!-- configuration parameters -->
-<meta name="defaultView" content="slideshow" />
-<meta name="controlVis" content="hidden" />
-<!-- configuration transition extension -->
-<meta name="tranSitions" content="true" />
-<meta name="fadeDuration" content="500" />
-<meta name="incrDuration" content="250" />
-<!-- configuration autoplay extension -->
-<meta name="autoMatic" content="false" />
-<meta name="playLoop" content="true" />
-<meta name="playDelay" content="10" />
-<!-- configuration audio extension -->
-<meta name="audioSupport" content="false" />
-<meta name="audioVolume" content="0" />
-<meta name="audioError" content="false" />
-<!-- configuration audio debug -->
-<meta name="audioDebug" content="false" />
-<!-- style sheet links -->
-<link rel="stylesheet" href="ui/scala_utf/slides.css" type="text/css" media="projection" id="slideProj" />
-<link rel="stylesheet" href="ui/scala_utf/outline.css" type="text/css" media="screen" id="outlineStyle" />
-<link rel="stylesheet" href="ui/scala_utf/print.css" type="text/css" media="print" id="slidePrint" />
-<link rel="stylesheet" href="ui/scala_utf/opera.css" type="text/css" media="projection" id="operaFix" />
-<!-- embedded styles -->
-<style type="text/css" media="all">
-.imgcon {width: 100%; margin: 0 auto; padding: 0; text-align: center;}
-#anim {width: 33%; height: 320px; position: relative;}
-#anim img {position: absolute; top: 0px; left: 0px;}
-.red {color: red;}
-.grey {color: gray;}
-</style>
-<!-- S5 JS -->
-<script src="ui/scala_utf/slides.js" type="text/javascript"></script>
+   <title>DBIx::Class (aka DBIC)</title>
+
+   <!-- Core and extension CSS files -->
+   <link rel="stylesheet" href="deck.js/core/deck.core.css">
+   <link rel="stylesheet" href="deck.js/extensions/goto/deck.goto.css">
+   <link rel="stylesheet" href="deck.js/extensions/menu/deck.menu.css">
+   <link rel="stylesheet" href="deck.js/extensions/navigation/deck.navigation.css">
+   <link rel="stylesheet" href="deck.js/extensions/status/deck.status.css">
+   <link rel="stylesheet" href="deck.js/extensions/hash/deck.hash.css">
+
+   <link href="SyntaxHighlighter/styles/shCoreRDark.css" rel="stylesheet" type="text/css" />
+   <link href="SyntaxHighlighter/styles/shRDark.css" rel="stylesheet" type="text/css" />
+
+   <!-- Theme CSS files (menu swaps these out) -->
+   <link rel="stylesheet" id="style-theme-link" href="deck.js/themes/style/neon.css">
+
+   <script src="deck.js/modernizr.custom.js"></script>
 </head>
-<body>
-
-<div class="layout">
-   <div id="controls"><!-- DO NOT EDIT --></div>
-   <div id="currentSlide"><!-- DO NOT EDIT --></div>
-   <div id="header"></div>
-   <div id="footer">
-      <h1>DBIx::Class Introduction</h1>
-      <h2>MTSI 2011-09-08</h2>
-   </div>
-</div>
-
-<div class="presentation">
+<body class="deck-container">
 
    <div class="slide">
       <h1>DBIX::Class (aka DBIC)</h1>
@@ -74,7 +33,7 @@
    </div>
 
    <div class="slide">
-      <h1>Contact Info</h1>
+      <h2>Contact Info</h2>
       <ul>
          <li>IRC: irc.perl.org #dbix-class</li>
          <li>ML: <a href="http://lists.scsys.co.uk/mailman/listinfo/dbix-class">http://lists.scsys.co.uk/mailman/listinfo/dbix-class</a></li>
@@ -83,13 +42,13 @@
    </div>
 
    <div class="slide">
-      <h1>Authors</h1>
+      <h2>Authors</h2>
       <h4>Originally Leo Lapworth @ LPW 2009</h4>
       <h4>Arthur Axel "fREW" Schmidt</h4>
    </div>
 
    <div class="slide">
-      <h1>What's up guys?</h1>
+      <h2>What's up guys?</h2>
       <ul class="incremental">
          <li>How many people have used any ORM?</li><ul class="incremental">
             <li>In Perl?<ul class="incremental">
@@ -106,7 +65,7 @@
    </div>
 
    <div class="slide">
-      <h1>Purpose</h1>
+      <h2>Purpose</h2>
       <p>The purpose of this talk is to show you as many features of
       DBIx::Class in 40 minutes so that when you need to do something with
       it later you will know what's possible</p>
@@ -116,7 +75,7 @@
    </div>
 
    <div class="slide">
-      <h1>DBIx::Class?</h1>
+      <h2>DBIx::Class?</h2>
       <ul>
          <li>ORM (object relational mapper)</li>
          <li>SQL &lt;-&gt; OO (using objects instead of SQL)</li>
@@ -125,25 +84,25 @@
    </div>
 
    <div class="slide">
-      <h1>Meta</h1>
+      <h2>Meta</h2>
       <p>These are reasons that are not technical or inherent to
       the code of DBIC, but are totally awesome things about it.</p>
    </div>
 
    <div class="slide">
-      <h1>Large Community</h1>
+      <h2>Large Community</h2>
       <p>Currently there are 88 people listed as contributors to DBIC.  That
       ranges from documentation help, to test help, to added features,
       to entire database support.</p>
    </div>
 
    <div class="slide">
-      <h1>Active Community</h1>
+      <h2>Active Community</h2>
       <p>Currently (June 9, 2010) 6 active branches (commited to in the last two weeks) in git.  Last release (0.08122) had 14 new features, and 16 bug fixes.  Of course that <a href="http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=dbsrgits/DBIx-Class.git;a=blob;f=Changes">ebbs and flows</a>.</p>
    </div>
 
    <div class="slide">
-      <h1>Responsive Community</h1>
+      <h2>Responsive Community</h2>
       <ul class="incremental">
          <li>needed MSSQL order-by support, they helped me add support</li>
          <li>generally very welcoming of people willing to help</li>
@@ -151,18 +110,18 @@
    </div>
 
    <div class="slide">
-      <h1>General ORM</h1>
+      <h2>General ORM</h2>
       <p>These are things that are in most other ORMs, but are still reasons
       to use DBIC over raw SQL.</p>
    </div>
 
    <div class="slide">
-      <h1>Cross DB</h1>
+      <h2>Cross DB</h2>
       <p>The vast majority of code should run on all databases without needing tweaking</p>
    </div>
 
    <div class="slide">
-      <h1>Basic CRUD</h1>
+      <h2>Basic CRUD</h2>
       <ul class="incremental">
          <li><strong>C</strong> - Create</li>
          <li><strong>R</strong> - Read</li>
@@ -172,8 +131,8 @@
    </div>
 
    <div class="slide">
-      <h1>SQL: Create</h1>
-<pre>my $sth = $dbh-&gt;prepare('
+      <h2>SQL: Create</h2>
+<pre class="brush: perl">my $sth = $dbh-&gt;prepare('
    INSERT INTO books
    (title, author_id)
    values (?,?)
@@ -185,8 +144,8 @@ $sth-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>DBIC: Create</h1>
-<pre>my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#create">create</a>({
+      <h2>DBIC: Create</h2>
+<pre class="brush: perl">my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#create">create</a>({
    title     =&gt; 'A book title',
    author_id =&gt; $author_id,
 });</pre>
@@ -198,8 +157,8 @@ $sth-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>SQL: Read</h1>
-<pre>my $sth = $dbh-&gt;prepare('
+      <h2>SQL: Read</h2>
+<pre class="brush: perl">my $sth = $dbh-&gt;prepare('
    SELECT title,
    authors.name as author_name
    FROM books, authors
@@ -216,8 +175,8 @@ while( my $book = $sth-&gt;fetchrow_hashref() ) {
    </div>
 
    <div class="slide">
-      <h1>DBIC: Read</h1>
-<pre>my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#find">find</a>($book_id);
+      <h2>DBIC: Read</h2>
+<pre class="brush: perl">my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#find">find</a>($book_id);
 
 my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#search">search</a>({
    title =&gt; 'A book title',
@@ -241,8 +200,8 @@ while( my $book = $books_rs-&gt;next ) {
    </div>
 
    <div class="slide">
-      <h1>SQL: Update</h1>
-<pre>my $update = $dbh-&gt;prepare('
+      <h2>SQL: Update</h2>
+<pre class="brush: perl">my $update = $dbh-&gt;prepare('
    UPDATE books
    SET title = ?
    WHERE id = ?
@@ -254,8 +213,8 @@ $update-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>DBIC: Update</h1>
-<pre>$book-&gt;<a href="http://metacpan.org/module/DBIx::Class::Row#update">update</a>({
+      <h2>DBIC: Update</h2>
+<pre class="brush: perl">$book-&gt;<a href="http://metacpan.org/module/DBIx::Class::Row#update">update</a>({
   title =&gt; 'New title',
 });</pre>
       <ul class="incremental">
@@ -264,8 +223,8 @@ $update-&gt;execute(
    </div>
 
    <div class="slide">
-      <h1>SQL: Delete</h1>
-<pre>my $delete = $dbh-&gt;prepare('
+      <h2>SQL: Delete</h2>
+<pre class="brush: perl">my $delete = $dbh-&gt;prepare('
    DELETE FROM books
    WHERE id = ?
 ');
@@ -274,13 +233,13 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
    </div>
 
    <div class="slide">
-      <h1>DBIC: Delete</h1>
-<pre>$book-&gt;<a href="http://metacpan.org/module/DBIx::Class::Row#delete">delete</a>;</pre>
+      <h2>DBIC: Delete</h2>
+<pre class="brush: perl">$book-&gt;<a href="http://metacpan.org/module/DBIx::Class::Row#delete">delete</a>;</pre>
    </div>
 
    <div class="slide">
-      <h1>SQL: Search</h1>
-<pre>my $sth = $dbh-&gt;prepare('
+      <h2>SQL: Search</h2>
+<pre class="brush: perl">my $sth = $dbh-&gt;prepare('
    SELECT title,
    authors.name as author_name
    FROM books
@@ -291,8 +250,8 @@ $delete-&gt;execute(<strong>$book_id</strong>);</pre>
    </div>
 
    <div class="slide">
-      <h1>DBIC: Search</h1>
-<pre>
+      <h2>DBIC: Search</h2>
+<pre class="brush: perl">
 my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#search">search</a>({
    'me.name'  =&gt; { -like =&gt; '%monte cristo%' },
    'me.topic' =&gt; 'jailbreak',
@@ -306,7 +265,7 @@ my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultS
    </div>
 
    <div class="slide">
-      <h1>OO Overidability</h1>
+      <h2>OO Overidability</h2>
       <ul class="incremental">
          <li>Override new if you want to do validation</li>
          <li>Override delete if you want to disable deletion</li>
@@ -320,7 +279,7 @@ my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultS
    </div>
 
    <div class="slide">
-      <h1>Convenience Methods</h1>
+      <h2>Convenience Methods</h2>
       <ul class="incremental">
          <li><a href="http://metacpan.org/module/DBIx::Class::ResultSet#find_or_create">find_or_create</a></li>
          <li><a href="http://metacpan.org/module/DBIx::Class::ResultSet#update_or_create">update_or_create</a></li>
@@ -328,13 +287,13 @@ my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultS
    </div>
 
    <div class="slide">
-      <h1>Non-column methods</h1>
+      <h2>Non-column methods</h2>
       <p>Need a method to get a user's gravatar URL?  Add a
       gravatar_url method to their Result class</p>
    </div>
 
    <div class="slide">
-      <h1>RELATIONSHIPS</h1>
+      <h2>RELATIONSHIPS</h2>
       <ul class="incremental">
          <li><a href="http://metacpan.org/module/DBIx::Class::Relationship#belongs_to">belongs_to</a></li>
          <li><a href="http://metacpan.org/module/DBIx::Class::Relationship#has_many">has_many</a></li>
@@ -346,9 +305,9 @@ my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultS
    </div>
 
    <div class="slide">
-      <h1>EXTENDED RELATIONSHIPS</h1>
+      <h2>EXTENDED RELATIONSHIPS</h2>
       <a href="https://metacpan.org/module/DBIx::Class::Relationship::Base#SYNOPSIS">See here</a>
-<pre> __PACKAGE__-&gt;belongs_to(
+<pre class="brush: perl"> __PACKAGE__-&gt;belongs_to(
   output_device =&gt; 'My::Schema::Result::OutputDevice',
   sub {
     my $args = shift;
@@ -381,9 +340,9 @@ my $book = $book_rs-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultS
    </div>
 
    <div class="slide">
-      <h1>-&gt;deploy</h1>
+      <h2>-&gt;deploy</h2>
       <p>Perl -&gt; DB</p>
-<pre>my $schema = Foo::Schema-&gt;connect(
+<pre class="brush: perl">my $schema = Foo::Schema-&gt;connect(
    $dsn, $user, $pass
 );
 $schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#deploy">deploy</a>
@@ -392,9 +351,9 @@ $schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#deploy">depl
    </div>
 
    <div class="slide">
-      <h1>Schema::Loader</h1>
+      <h2>Schema::Loader</h2>
       <p>DB -&gt; Perl</p>
-<pre>package Foo::Schema;
+<pre class="brush: perl">package Foo::Schema;
 use strict; use warnings;
 use base '<a href="http://metacpan.org/module/DBIx::Class::Schema::Loader">DBIx::Class::Schema::Loader</a>';
 __PACKAGE__-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema::Loader::Base#CONSTRUCTOR_OPTIONS">loader_options</a>({
@@ -412,9 +371,9 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1>Populate</h1>
+      <h2>Populate</h2>
       <p>Made for inserting lots of rows very quicky into database</p>
-<pre>$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#populate">populate</a>([ Users =&gt;
+<pre class="brush: perl">$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#populate">populate</a>([ Users =&gt;
    [qw( username password )],
    [qw( frew     &gt;=4char$ )],
    [qw(      ...          )],
@@ -427,9 +386,9 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1>Multicreate</h1>
+      <h2>Multicreate</h2>
       <p>Create an object and all of it's related objects all at once</p>
-<pre>$schema-&gt;resultset('Author')-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#create">create</a>({
+<pre class="brush: perl">$schema-&gt;resultset('Author')-&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#create">create</a>({
    name =&gt; 'Stephen King',
    books =&gt; [{ title =&gt; 'The Dark Tower' }],
    address =&gt; {
@@ -449,85 +408,85 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1>Extensible</h1>
+      <h2>Extensible</h2>
       <p>DBIx::Class helped pioneer fast MI in Perl 5 with Class::C3, so it is made
       to allow extensions to nearly every part of it.</p>
    </div>
 
    <div class="slide">
-      <h1>DBIx::Class Components</h1>
+      <h2>DBIx::Class Components</h2>
       <h4>NOT ALL ME, LOTS OF AUTHORS</h4>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::TimeStamp">::TimeStamp</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::TimeStamp">::TimeStamp</a></h2>
       <p>USE THIS for any kind of timestamp (set on create or set on update)</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::EncodedColumn">::EncodedColumn</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::EncodedColumn">::EncodedColumn</a></h2>
       <p>USE THIS for password columns</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::IgnoreWantarray">::Helper::ResultSet::IgnoreWantarray</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::IgnoreWantarray">::Helper::ResultSet::IgnoreWantarray</a></h2>
       <p>USE THIS for less surprising resultsets (must call -&gt;all)</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::OnColumnChange">::Helper::Row::OnColumnChange</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::OnColumnChange">::Helper::Row::OnColumnChange</a></h2>
       <p>USE THIS to do something when a value changes (per column)</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SetOperations">::Helper::ResultSet::SetOperations</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SetOperations">::Helper::ResultSet::SetOperations</a></h2>
       <p>USE THIS to use UNION and other set ops with DBIC</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM">::Helper::Row::RelationshipDWIM</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM">::Helper::Row::RelationshipDWIM</a></h2>
       <p>USE THIS to avoid carpel tunnel (has_many cars =&gt; 'Cars', ...)</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::StorageValues">::Helper::Row::StorageValues</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::StorageValues">::Helper::Row::StorageValues</a></h2>
       <p>USE THIS to keep track of what's in the DB before you call update and after you use an accessor</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::SubClass">::Helper::Row::SubClass</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::SubClass">::Helper::Row::SubClass</a></h2>
       <p>USE THIS to subclass parts of your schema (deprecated by new versions of Class::C3::Componentised)</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::ToJSON">::Helper::Row::ToJSON</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::ToJSON">::Helper::Row::ToJSON</a></h2>
       <p>USE THIS to generate a sensible TO_JSON method</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Candy">::Candy</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Candy">::Candy</a></h2>
       <p>Use this to avoid carpel tunnel (no more __PACKAGE__)</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::ResultClassDWIM">::Helper::ResultSet::ResultClassDWIM</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::ResultClassDWIM">::Helper::ResultSet::ResultClassDWIM</a></h2>
       <p>Use this to avoid carpel tunnel ( result_class =&gt; '::HRI' )</p>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::RemoveColumns">::Helper::ResultSet::RemoveColumns</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::RemoveColumns">::Helper::ResultSet::RemoveColumns</a></h2>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::Random">::Helper::ResultSet::Random</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::Random">::Helper::ResultSet::Random</a></h2>
    </div>
 
    <div class="slide">
-      <h1><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h1>
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h2>
    </div>
 
    <div class="slide">
-      <h1>Extensible: Kioku</h1>
+      <h2>Extensible: Kioku</h2>
       <ul class="incremental">
          <li><a href="http://metacpan.org/module/DBIx::Class::Schema::KiokuDB">DBIx::Class::Schema::KiokuDB</a></li>
          <li>Kioku is the new hotness</li>
@@ -537,7 +496,7 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1>Result vs ResultSet</h1>
+      <h2>Result vs ResultSet</h2>
          <ul class="incremental">
             <li>Result == Row</li>
             <li>ResultSet == Query Plan<ul class="incremental">
@@ -550,8 +509,8 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h1><a href="http://metacpan.org/module/DBIx::Class::Manual::Cookbook#Predefined_searches">ResultSet methods</a></h1>
-<pre>package MyApp::Schema::ResultSet::Book;
+      <h2><a href="http://metacpan.org/module/DBIx::Class::Manual::Cookbook#Predefined_searches">ResultSet methods</a></h2>
+<pre class="brush: perl">package MyApp::Schema::ResultSet::Book;
 use base 'DBIx::Class::ResultSet';
 sub good {
    my $self = shift;
@@ -573,7 +532,7 @@ sub cheap {
    </div>
 
    <div class="slide">
-      <h1>ResultSet method notes</h1>
+      <h2>ResultSet method notes</h2>
       <ul class="incremental">
          <li>All searches should be ResultSet methods</li>
          <li>Name has obvious meaning</li>
@@ -582,13 +541,13 @@ sub cheap {
    </div>
 
    <div class="slide">
-      <h1>ResultSet method in Action</h1>
-      <pre>$schema-&gt;resultset('Book')-&gt;good</pre>
+      <h2>ResultSet method in Action</h2>
+      <pre class="brush: perl">$schema-&gt;resultset('Book')-&gt;good</pre>
    </div>
 
    <div class="slide">
-      <h1>ResultSet Chaining</h1>
-<pre>$schema-&gt;resultset('Book')
+      <h2>ResultSet Chaining</h2>
+<pre class="brush: perl">$schema-&gt;resultset('Book')
    -&gt;good
    -&gt;cheap
    -&gt;recent
@@ -596,8 +555,8 @@ sub cheap {
    </div>
 
    <div class="slide">
-      <h1>search_related</h1>
-<pre>my $score = $schema-&gt;resultset('User')
+      <h2>search_related</h2>
+<pre class="brush: perl">my $score = $schema-&gt;resultset('User')
    -&gt;search({'me.userid' =&gt; 'frew'})
    -&gt;<a href="http://metacpan.org/module/DBIx::Class::ResultSet#related_resultset">related_resultset</a>('access')
    -&gt;related_resultset('mgmt')
@@ -615,8 +574,8 @@ sub cheap {
    </div>
 
    <div class="slide">
-      <h1>bonus rel methods</h1>
-<pre>my $book = $author-&gt;<a href="http://metacpan.org/module/DBIx::Class::Relationship::Base#create_related">create_related</a>(
+      <h2>bonus rel methods</h2>
+<pre class="brush: perl">my $book = $author-&gt;<a href="http://metacpan.org/module/DBIx::Class::Relationship::Base#create_related">create_related</a>(
    <strong>books</strong> =&gt; {
       title =&gt; 'Another Discworld book',
    }
@@ -631,8 +590,8 @@ my $book2 = $pratchett-&gt;<a href="http://metacpan.org/module/DBIx::Class::Rela
    </div>
 
    <div class="slide">
-      <h1>Excellent Transaction Support</h1>
-<pre>$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#txn_do">txn_do</a>(sub {
+      <h2>Excellent Transaction Support</h2>
+<pre class="brush: perl">$schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#txn_do">txn_do</a>(sub {
    ...
 });
 
@@ -647,8 +606,8 @@ $schema-&gt;<a href="http://metacpan.org/module/DBIx::Class::Schema#txn_commit">
    </div>
 
    <div class="slide">
-      <h1>InflateColumn</h1>
-<pre>package Foo::Schema::Result::Book;
+      <h2>InflateColumn</h2>
+<pre class="brush: perl">package Foo::Schema::Result::Book;
 use base 'DBIx::Class::Core';
 use DateTime::Format::MySQL;
 # Result code here
@@ -667,21 +626,21 @@ __PACKAGE__-&gt;<strong><a href="http://metacpan.org/module/DBIx::Class::Inflate
    </div>
 
    <div class="slide">
-      <h1>InflateColumn: deflation</h1>
-<pre>$book-&gt;date_published(DateTime-&gt;now);
+      <h2>InflateColumn: deflation</h2>
+<pre class="brush: perl">$book-&gt;date_published(DateTime-&gt;now);
 $book-&gt;update;</pre>
    </div>
 
    <div class="slide">
-      <h1>InflateColumn: inflation</h1>
-<pre>say $book-&gt;date_published-&gt;month_abbr;</pre>
+      <h2>InflateColumn: inflation</h2>
+<pre class="brush: perl">say $book-&gt;date_published-&gt;month_abbr;</pre>
 
 <strong><em>Nov</em></strong>
    </div>
 
    <div class="slide">
-      <h1>FilterColumn</h1>
-<pre>package Foo::Schema::Result::Book;
+      <h2>FilterColumn</h2>
+<pre class="brush: perl">package Foo::Schema::Result::Book;
 use base 'DBIx::Class::Core';
 # Result code here
 __PACKAGE__-&gt;load_components('<a href="http://metacpan.org/module/DBIx::Class::FilterColumn">FilterColumn</a>');
@@ -698,8 +657,8 @@ sub to_imperial { $_[1] * 3.28 }
    </div>
 
    <div class="slide">
-      <h1><a href="http://metacpan.org/module/DBIx::Class::ResultSetColumn">ResultSetColumn</a></h1>
-<pre>my $rsc = $schema-&gt;resultset('Book')
+      <h2><a href="http://metacpan.org/module/DBIx::Class::ResultSetColumn">ResultSetColumn</a></h2>
+<pre class="brush: perl">my $rsc = $schema-&gt;resultset('Book')
    -&gt;get_column('price');
 $rsc-&gt;first;
 $rsc-&gt;all;
@@ -710,8 +669,8 @@ $rsc-&gt;sum;
    </div>
 
    <div class="slide">
-      <h1>Aggregates</h1>
-<pre>my @res = $rs-&gt;search({}, {
+      <h2>Aggregates</h2>
+<pre class="brush: perl">my @res = $rs-&gt;search({}, {
    <a href="http://metacpan.org/module/DBIx::Class::ResultSet#select">select</a>   =&gt; [
       'price',
       'genre',
@@ -731,7 +690,7 @@ for (@res) {
    </div>
 
    <div class="slide">
-      <h1>Aggregates Notes</h1>
+      <h2>Aggregates Notes</h2>
       <ul class="incremental">
          <li>Careful, get_column can basicaly mean THREE things</li>
          <li>private for get what you should use an accessor for</li>
@@ -741,8 +700,8 @@ for (@res) {
    </div>
 
    <div class="slide">
-      <h1>HRI</h1>
-<pre>$rs-&gt;search({}, {
+      <h2>HRI</h2>
+<pre class="brush: perl">$rs-&gt;search({}, {
   <a href="http://metacpan.org/module/DBIx::Class::ResultSet#result_class">result_class</a> =&gt;
     '<a href="http://metacpan.org/module/DBIx::Class::ResultClass::HashRefInflator">DBIx::Class::ResultClass::HashRefInflator</a>',
 });</pre>
@@ -755,8 +714,8 @@ for (@res) {
    </div>
 
    <div class="slide">
-      <h1><a href="http://metacpan.org/module/DBIx::Class::Manual::Cookbook#Subqueries">Subquery</a> Support</h1>
-<pre>my $inside_query = $schema-&gt;resultset('Artist')
+      <h2><a href="http://metacpan.org/module/DBIx::Class::Manual::Cookbook#Subqueries">Subquery</a> Support</h2>
+<pre class="brush: perl">my $inside_query = $schema-&gt;resultset('Artist')
    -&gt;search({
     name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
 })-&gt;get_column('id')-&gt;as_query;
@@ -767,8 +726,8 @@ my $rs = $schema-&gt;resultset('CD')-&gt;search({
    </div>
 
    <div class="slide">
-      <h1><a href="http://metacpan.org/module/SQL::Abstract#Literal_SQL_with_placeholders_and_bind_values_(subqueries)">Bare SQL w/ Placeholders</a></h1>
-<pre>$rs-&gt;update({
+      <h2><a href="http://metacpan.org/module/SQL::Abstract#Literal_SQL_with_placeholders_and_bind_values_(subqueries)">Bare SQL w/ Placeholders</a></h2>
+<pre class="brush: perl">$rs-&gt;update({
    # !!! SQL INJECTION VECTOR
    price =&gt; \"price + $inc",
 });
@@ -780,7 +739,7 @@ $rs-&gt;update({
    </div>
 
    <div class="slide">
-      <h1>DBIx::Class</h1>
+      <h2>DBIx::Class</h2>
 <li>  Brainchild of mst</li>
 <li>  Inspired by Class::DBI / Class::DBI::Sweet</li>
 <li>  Inherited large portion of API (and warts)</li>
@@ -789,14 +748,14 @@ $rs-&gt;update({
    </div>
 
    <div class="slide">
-      <h1>Misconceptions: What is DBIx::Class</h1><ul>
+      <h2>Misconceptions: What is DBIx::Class</h2><ul>
 <li>  A DBI extension? </li>
 <li>  ORM? </li>
 <li>  Framework? </li>
    </div>
 
    <div class="slide">
-      <h1>Misconceptions: What is DBIx::Class</h1><ul>
+      <h2>Misconceptions: What is DBIx::Class</h2><ul>
 <li>  A DBI extension? </li>
 <li>  ORM? </li>
 <li>  Framework? </li>
@@ -804,14 +763,14 @@ $rs-&gt;update({
    </div>
 
 <div class="slide">
-      <h1>Flexible RDBMS de-hater</h1><ul>
+      <h2>Flexible RDBMS de-hater</h2><ul>
 <li>Designed to work with flat-row based resultsets </li>
 <li>Currently <i>somewhat</i> rooted in SQL/DBI (lack of alternative use-cases) </li>
 <li>Individual layers are mostly independent (reports to the contrary welcome) </li>
 </div>
 
 <div class="slide">
-      <h1>Loosely coupled abstractions</h1><ul>
+      <h2>Loosely coupled abstractions</h2><ul>
 <li>  Query definition/manipulation framework (DBIx::Class::ResultSet) </li>
 <li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI )) </li>
 <li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource) </li>
@@ -820,7 +779,7 @@ $rs-&gt;update({
 
 
    <div class="slide">
-      <h1>Random example - SQL metaprogramming</h1>
+      <h2>Random example - SQL metaprogramming</h2>
     <pre style="font-size:80%">
     $shadow_rs->search({ shadow_val_title => 'stab' })->insert({
 
@@ -871,23 +830,23 @@ INSERT
   )
 
      </div><div class="slide">
-      <h1>Confusing design</h1><ul>
+      <h2>Confusing design</h2><ul>
 <li>Awkwardness is justified </li>
 <li>Gradually removed where it isn't (reports to the contrary welcome) </li>
 <li>Can be mostly ignored
 </dev>
 
      </div><div class="slide">
-      <h1>Confusing design: Components</h1><ul>
+      <h2>Confusing design: Components</h2><ul>
 <li>  Roles in 2005
-<li>  <pre>__PACKAGE__->load_components == multiple with statements</pre>
+<li>  <pre class="brush: perl">__PACKAGE__->load_components == multiple with statements</pre>
 <li>Writing a component is no different than writing a role
 <li>Using real Moose roles just works like it does everywhere else (courtesy of MooseX::NonMoose)
 <li>Multiple inheritance is not evil when you know what you are doing (and we do)
 </div>
 
      <div class="slide">
-      <h1>Confusing design: Result Class / Core Components</h1><ul>
+      <h2>Confusing design: Result Class / Core Components</h2><ul>
 <p><pre style="font-size:50%">
 use base 'DBIx::Class';
 __PACKAGE__->load_components('Core');
@@ -898,7 +857,7 @@ use base 'DBIx::Class::Core';
 </div>
 
      <div class="slide">
-      <h1>Confusing design: Result Class / Core Components</h1><ul>
+      <h2>Confusing design: Result Class / Core Components</h2><ul>
 <p><pre style="font-size:50%">
 use base 'DBIx::Class';
 __PACKAGE__->load_components('Core');
@@ -937,16 +896,16 @@ use base qw(
 
 
      <div class="slide">
-      <h1>Confusing design: Result Source instances</h1><ul>
+      <h2>Confusing design: Result Source instances</h2><ul>
 <li>CDBI legacy, turned out to be extremely useful
 <li>Proxying<p>
-    <pre>
+    <pre class="brush: perl">
 __PACKAGE__->add_column('name')
       ===
 __PACKAGE__->result_source_instance->add_column('name')
 </pre>
 <li>JS-like prototypical OO with partial implicit cloning<p>
-<pre>
+<pre class="brush: perl">
 My::Schema::Result::Artist->has_many(...) (i.e. __PACKAGE__->has_many)
   !=
 My::Schema->source('Artist')->has_many(...)
@@ -956,7 +915,7 @@ $schema->source('Artist')->has_many(...)
 </div>
 
      <div class="slide">
-      <h1>Confusing design: Class data / Class::Accessor::Grouped</h1><ul>
+      <h2>Confusing design: Class data / Class::Accessor::Grouped</h2><ul>
 <li>The pre-moose way of doing sane attributes
 <li>First sane implementation of hybrid class/instance data
 <li>Gradual internals migration to Moo where it makes sense
@@ -978,9 +937,9 @@ sub set_simple_lazy_required {
 
 
      </div><div class="slide">
-      <h1>Confusing design: Class data / Class::Accessor::Grouped</h1>
+      <h2>Confusing design: Class data / Class::Accessor::Grouped</h2>
  <p>
- <pre>
+ <pre class="brush: perl">
     __PACKAGE__->add_column('foo')
 
 among other things does
@@ -989,9 +948,9 @@ among other things does
 </pre>
 
      </div><div class="slide">
-      <h1>Confusing design: Class data / Class::Accessor::Grouped</h1>
+      <h2>Confusing design: Class data / Class::Accessor::Grouped</h2>
  <p>
- <pre>
+ <pre class="brush: perl">
     __PACKAGE__->add_column('foo')
 
 among other things does
@@ -1004,7 +963,7 @@ among other things does
 
 
 <div class="slide">
-      <h1>Loosely coupled abstractions</h1><ul>
+      <h2>Loosely coupled abstractions</h2><ul>
 <li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
 <li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))
 <li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
@@ -1012,7 +971,7 @@ among other things does
 </div>
 
 <div class="slide">
-      <h1>Loosely coupled abstractions</h1>
+      <h2>Loosely coupled abstractions</h2>
 
 <p><pre style="font-size:70%">
   my $schema_instance               # knows about its registered sources (load_namespaces,
@@ -1036,25 +995,25 @@ among other things does
 </pre>
 </div>
 
-   </div><div class="slide">      <h1>Loosely coupled abstractions</h1>
+   </div><div class="slide">      <h2>Loosely coupled abstractions</h2>
 <h2>Query definition/manipulation framework (DBIx::Class::ResultSet)</h2><ul>
 <li>  Query plan (geared to a specific source)
 <li> Easily subclassable (load_namespaces - just name accordingly)
 <li>  Immutable
 <li>  Able to express/override all query primitives
 <li>  Holds returned selection <i>parsing</i> metadata:
-<pre>
+<pre class="brush: perl">
     result_class
     inflation-specification (as)
 </pre>
 <li> Inherits defaults from referenced Result Source (if any)
 <li><b>EVERYTHING IS OVERRIDABLE</b>
 
-   </div><div class="slide">      <h1>Loosely coupled abstractions</h1>
+   </div><div class="slide">      <h2>Loosely coupled abstractions</h2>
 <h2>Query definition language - not hardcoded (almost)</h2><ul>
 <li>SQL::Abstract current way of doing things
 <li>Trivial raw SQL passthrough:
-<pre>
+<pre class="brush: perl">
   $schema->resultset('Artist')->search(
     \[
       'any sql you want here ? with ? bindvals',
@@ -1068,10 +1027,10 @@ among other things does
 </div>
 
 <div class="slide">
-      <h1>ResultSet Chains are Infinitely nestable</h1><ul>
+      <h2>ResultSet Chains are Infinitely nestable</h2><ul>
 
 <li>    Shallow nesting (chaining)
-<pre>
+<pre class="brush: perl">
     $rs->search({ name => { '!=', 'blah' }})
         ->search({ name => { '!=', undef }})
 
@@ -1086,8 +1045,8 @@ among other things does
     ... SELECT FROM (SELECT * FROM artist GROUP_BY * ) LIMIT 1
 </pre>
    </div><div class="slide">
-      <h1>Relationship metadata traversal</h1><ul>
-<pre>
+      <h2>Relationship metadata traversal</h2><ul>
+<pre class="brush: perl">
     $artist_rs->search_related('cds')
                ->search_related('artwork')
                 ->search_related('artwork_to_artists')
@@ -1104,12 +1063,12 @@ among other things does
       ON artist.artistid = artwork_to_artist.artist_id
 </pre>
 <li> Trivial to hide behind a ResultSet method:
-<pre> $artist_rs->my_cd_artwork_creators</pre>
+<pre class="brush: perl"> $artist_rs->my_cd_artwork_creators</pre>
 
 
 
    </div><div class="slide">
-      <h1>Overridable/augmentable default selection</h1><ul>
+      <h2>Overridable/augmentable default selection</h2><ul>
 <pre style="font-size:65%">
   $rs->search({}, { '+columns' => ['foo', { max_bar => \'MAX(bar)' }] });
   $rs->search({}, { select => 'multi_value_func', as => [qw(val1 val2)] });
@@ -1117,7 +1076,7 @@ among other things does
 <li> Currently does not create accessors on the fly, planned feature
 
    </div><div class="slide">
-      <h1 style="font-size:80%">Overridable/augmentable default selection: AS IS NOT AS</h1><ul>
+      <h2 style="font-size:81%">Overridable/augmentable default selection: AS IS NOT AS</h2><ul>
 <li>Represents an inflation plan
 <pre style="font-size:65%">
   $artist_rs->search({}, { prefetch => { cds => 'tracks' } });
@@ -1145,26 +1104,26 @@ among other things does
 
 
    </div><div class="slide">
-      <h1>ResultSet operations (CRUD)</h1><ul style="font-size:90%">
+      <h2>ResultSet operations (CRUD)</h2><ul style="font-size:90%">
 <li>  No-result CREATE/UPDATE/RETRIEVE
-<pre>
+<pre class="brush: perl">
     $rs->populate
     $rs->update
     $rs->delete
 </pre>
 <li>  Low level RETRIEVE ($sth->selectall_arrayref/fetchrow_array)<br>
     (epecially when you want to limit DBIC to a super-smart SQL generator)
-<pre>
+<pre class="brush: perl">
     $rs->cursor->next/all
 </pre>
 <li>  Roundtrip Result-inflating CREATE/RETRIEVE
-<pre>
+<pre class="brush: perl">
     $rs->create
     $rs->next/all
 </pre>
 
 <li>  Inflation (what happens on ->next/->all)
-<pre>
+<pre class="brush: perl">
     $rs->result_class->inflate_result(
       $rs->cursor->next
     + as-specification from $rs
@@ -1176,7 +1135,7 @@ among other things does
 
 
 <div class="slide">
-      <h1>Loosely coupled abstractions</h1><ul>
+      <h2>Loosely coupled abstractions</h2><ul>
 <li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
 <li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))
 <li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
@@ -1187,7 +1146,7 @@ among other things does
 
 
 <div class="slide">
-      <h1>Storage Layer</h1>
+      <h2>Storage Layer</h2>
 <h2>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))</h2><ul>
 <li>    Holds $dbh (almost like DBIx::Connector)
 <li>    Fork/thread and stale connection handling
@@ -1202,10 +1161,10 @@ among other things does
 
 
 <div class="slide">
-      <h1>Storage Layer</h1>
+      <h2>Storage Layer</h2>
 <h2>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))</h2><ul>
 <li>Provides -&gt;dbh_do - NOTHING WRONG WITH USING IT<br>
-<pre>
+<pre class="brush: perl">
   $schema->storage->dbh_do(sub {
     return $_[1]->selectall_arrayref(
       &lt;something unholy goes here>
@@ -1216,7 +1175,7 @@ among other things does
 </div>
 
 <div class="slide">
-      <h1>Loosely coupled abstractions</h1><ul>
+      <h2>Loosely coupled abstractions</h2><ul>
 <li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
 <li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))
 <li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
@@ -1224,7 +1183,7 @@ among other things does
 </div>
 
    </div><div class="slide">
-      <h1>Schema</h1><ul>
+      <h2>Schema</h2><ul>
 <li>  Bundles multiple ResultSources accessible over the same Storage instance
 <li>  Circular "where is my towel day"
 <li> Every ResultSource instance knows about its Schema and every Schema instance knows about its registered Sources
@@ -1232,38 +1191,38 @@ among other things does
 </div>
 
 <div class="slide">
-      <h1>ResultSource</h1><ul>
+      <h2>ResultSource</h2><ul>
   <li>Standalone source metadata
 
    </div><div class="slide">
-      <h1>Source name (->table)</h1><ul>
+      <h2>Source name (->table)</h2><ul>
 <li>  (table/view/procedure/etc)
 <li>  Direct SQL expression
 
    </div><div class="slide">
-      <h1>Columns (->add_columns)</h1><ul>
+      <h2>Columns (->add_columns)</h2><ul>
 <li>  Expected result definition
 <li>  Non-mandatory(!) selection defaults
 <li>  Accessor autogeneration
 <li>  Optional metadata (data_type, pre/postprocessing)
 
    </div><div class="slide">
-      <h1>Constraint Hints</h1>
+      <h2>Constraint Hints</h2>
       <h2>(->set_primary_columns / ->add_unique_constraint )</h2><ul>
 <li>  Also optional
 <li>  Good idea - see DBIx::Class::Manual::Intro::The_Significance_and_Importance_of_Primary_Keys
 
    </div><div class="slide">
-      <h1>Relationships</h1>
+      <h2>Relationships</h2>
       <h2>( belongs_to / has_many / has_one / might_have ... )</h2><ul>
 <li>  Between standalone sources
 <li>  One way
 <li>  Express single JOIN
 
    </div><div class="slide">
-      <h1>Relationship types</h1><ul>
+      <h2>Relationship types</h2><ul>
 <li>  Arguably the worst CDBI legacy
-<pre>
+<pre class="brush: perl">
   belongs_to -
     "I have a (partially) dedicated column to hold
      value(s) of *ANOTHER* Source's column(s)"
@@ -1276,7 +1235,7 @@ among other things does
 
 
 <div class="slide">
-      <h1>Loosely coupled abstractions</h1><ul>
+      <h2>Loosely coupled abstractions</h2><ul>
 <li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
 <li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))
 <li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
@@ -1285,7 +1244,7 @@ among other things does
 
 <!--
    <div class="slide">
-      <h1>SQL</h1><ul>
+      <h2>SQL</h2><ul>
   NOT Turing-Complete
   Infinitely nestable
   Limited amount of primitives
@@ -1293,7 +1252,7 @@ among other things does
 SQL Statement Anatomy
 
    <div class="slide">
-      <h1>SQL anatomy in evaluation order
+      <h2>SQL anatomy in evaluation order
 
   Source
     FROM artist
@@ -1314,7 +1273,7 @@ SQL Statement Anatomy
 -->
 
    </div><div class="slide">
-      <h1>DBIx::Class::Core / DBIx::Class::Row</h1><ul>
+      <h2>DBIx::Class::Core / DBIx::Class::Row</h2><ul>
 <li>  Data accessors
 <li>  Relationship Accessors
 <li>  Hooks to ResultSource/Schema/ResultSet instances
@@ -1322,16 +1281,16 @@ SQL Statement Anatomy
 <li>  Plugins (components/roles/whateveryouwannacallit)
 
    </div><div class="slide">
-      <h1>DBIx::Class::ResultClass::HashRefInflator</h1><ul>
+      <h2>DBIx::Class::ResultClass::HashRefInflator</h2><ul>
 <li>  Plain hashes
 <li>  Respecting nesting of "as"-specification
 
    </div><div class="slide">
-      <h1>Write your own result class</h1><ul>
+      <h2>Write your own result class</h2><ul>
 <li>  DBIC layers have *NO EXPECTATIONS* of result format
 
    </div><div class="slide">
-      <h1>So what good is all of this?</h1><ul style="font-size:90%">
+      <h2>So what good is all of this?</h1><ul style="font-size:90%">
 
       <li>  Data-Source/Relationship abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
 <ul>
@@ -1365,6 +1324,41 @@ SQL Statement Anatomy
    <div class="slide">
       <h1>END</h1>
    </div>
-</div>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+   <span class="deck-status-current"></span>
+   /
+   <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+   <label for="goto-slide">Go to slide:</label>
+   <input type="number" name="slidenum" id="goto-slide">
+   <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+<script>window.jQuery || document.write('<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js">\x3C/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="deck.js/core/deck.core.js"></script>
+<script src="deck.js/extensions/menu/deck.menu.js"></script>
+<script src="deck.js/extensions/goto/deck.goto.js"></script>
+<script src="deck.js/extensions/status/deck.status.js"></script>
+<script src="deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="deck.js/extensions/hash/deck.hash.js"></script>
+
+<script type="text/javascript" src="SyntaxHighlighter/scripts/XRegExp.js"></script>
+<script type="text/javascript" src="SyntaxHighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="SyntaxHighlighter/scripts/shBrushPerl.js"></script>
+
+<!-- Specific to this page -->
+<script src="index.js"></script>
+
 </body>
 </html>
