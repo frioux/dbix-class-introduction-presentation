@@ -1,5 +1,7 @@
 $(function() {
    // Deck initialization
+
+   $.deck.defaults.countNested = false;
    $.deck('.slide');
 
    $('#style-themes').change(function() {
