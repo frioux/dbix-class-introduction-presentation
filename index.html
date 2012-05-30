@@ -28,8 +28,7 @@
 <body class="deck-container">
 
    <div class="slide">
-      <h1>DBIX::Class (aka DBIC)</h1>
-      <h3>for advanced users</h3>
+      <h1>DBIx::Class</h1>
    </div>
 
    <div class="slide">
@@ -43,7 +42,6 @@
 
    <div class="slide">
       <h2>Authors</h2>
-      <h4>Originally Leo Lapworth @ LPW 2009</h4>
       <h4>Arthur Axel "fREW" Schmidt</h4>
    </div>
 
@@ -79,7 +77,7 @@
       <ul>
          <li>ORM (object relational mapper)</li>
          <li>SQL &lt;-&gt; OO (using objects instead of SQL)</li>
-         <li>There are many ORMs, DBIx::Class just happens to be the best in Perl (personal opinion)</li>
+         <li>There are many ORMs, DBIx::Class just happens to be the best in Perl (my correct opinion)</li>
       </ul>
    </div>
 
@@ -91,14 +89,14 @@
 
    <div class="slide">
       <h2>Large Community</h2>
-      <p>Currently there are 88 people listed as contributors to DBIC.  That
+      <p>Currently there are 118 people listed as contributors to DBIC.  That
       ranges from documentation help, to test help, to added features,
       to entire database support.</p>
    </div>
 
    <div class="slide">
       <h2>Active Community</h2>
-      <p>Currently (June 9, 2010) 6 active branches (commited to in the last two weeks) in git.  Last release (0.08122) had 14 new features, and 16 bug fixes.  Of course that <a href="http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=dbsrgits/DBIx-Class.git;a=blob;f=Changes">ebbs and flows</a>.</p>
+      <p>Upcoming release (0.08197?) has 8 new features, and 26 bug fixes.  Of course that <a href="http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=dbsrgits/DBIx-Class.git;a=blob;f=Changes">ebbs and flows</a>.</p>
    </div>
 
    <div class="slide">
@@ -213,7 +211,7 @@ while( my $book = $books_rs-&gt;next ) {
 ');
 
 $update-&gt;execute(
-  'New title',<strong>$book_id</strong>
+  'New title',$book_id
 );</pre>
    </div>
 
@@ -235,7 +233,7 @@ $update-&gt;execute(
    WHERE id = ?
 ');
 
-$delete-&gt;execute(<strong>$book_id</strong>);</pre>
+$delete-&gt;execute($book_id);</pre>
    </div>
 
    <div class="slide">
@@ -271,7 +269,7 @@ my $book = $book_rs-&gt;search({
          <li class="slide"><a href="http://metacpan.org/module/DBIx::Class::ResultSet#next">next</a></li>
          <li class="slide"><a href="http://metacpan.org/module/SQL::Abstract">SQL::Abstract</a></li>
          <li class="slide">(kinda) introspectible</li>
-         <li class="slide">Prettier than SQL</li>
+         <li class="slide">Objectively prettier than SQL</li>
       </ul>
    </div>
 
@@ -282,9 +280,7 @@ my $book = $book_rs-&gt;search({
          <li class="slide">Override delete if you want to disable deletion</li>
          <li class="slide">and on and on</li>
          <li class="slide">
-            <p>I got yelled at about this before by people, so
-            we don't get EVERYTHING from OO, but we do get a lot
-            so :-P</p>
+            <p>Note: we don't get <strong>everything</strong> from OO, but I it's still pretty great without <a href="http://en.wikipedia.org/wiki/Nosql">Giving Up</a></p>
          </li>
       </ul>
    </div>
@@ -316,34 +312,22 @@ my $book = $book_rs-&gt;search({
    </div>
 
    <div class="slide">
-      <h2>EXTENDED RELATIONSHIPS</h2>
-      <a href="https://metacpan.org/module/DBIx::Class::Relationship::Base#SYNOPSIS">See here</a>
+      <h2><a href="https://metacpan.org/module/DBIx::Class::Relationship::Base#SYNOPSIS">EXTENDED RELATIONSHIPS</a></h2>
 <pre class="brush: perl"> __PACKAGE__-&gt;belongs_to(
   output_device =&gt; 'My::Schema::Result::OutputDevice',
   sub {
     my $args = shift;
 
-    my $him = $args-&gt;{foreign_alias};
-    my $me  = $args-&gt;{self_alias};
+    my $other = $args-&gt;{foreign_alias};
+    my $me   = $args-&gt;{self_alias};
     my $self = $args-&gt;{self_rowobj};
-    my $shared = { "$him.shared" =&gt; [qw(Y X)] };
     return ({
-      -and =&gt; [
-        [
-          { "$him.user" =&gt; { -ident =&gt; "$me.user" } },
-          $shared,
-        ],
-        { "$him.phone" =&gt; { -ident =&gt; "$me.phone" } },
-      ]
+      "$other.user"   =&gt; { -ident =&gt; "$me.user" },
+      "$other.shared" =&gt; 1,
     },
     $self &amp;&amp; {
-      -and =&gt; [
-        [
-          { "$him.user" =&gt; $self-&gt;user },
-          $shared,
-        ],
-        { "$him.phone" =&gt; $self-&gt;phone },
-      ]
+       "$him.user"     =&gt; $self-&gt;user,
+       "$other.shared" =&gt; 1,
     });
   },
 );</pre>
@@ -368,7 +352,6 @@ $schema-&gt;deploy
       <h2>Schema::Loader</h2>
       <p>DB -&gt; Perl</p>
 <pre class="brush: perl">package Foo::Schema;
-use strict; use warnings;
 use base 'DBIx::Class::Schema::Loader';
 __PACKAGE__-&gt;loader_options({
    naming =&gt; 'v7',
@@ -503,16 +486,6 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
-      <h2>Extensible: Kioku</h2>
-      <ul>
-         <li class="slide"><a href="http://metacpan.org/module/DBIx::Class::Schema::KiokuDB">DBIx::Class::Schema::KiokuDB</a></li>
-         <li class="slide">Kioku is the new hotness</li>
-         <li class="slide">Mix RDBMS with Object DB</li>
-         <li class="slide">beta ( == sexy )</li>
-      </ul>
-   </div>
-
-   <div class="slide">
       <h2>Result vs ResultSet</h2>
          <ul>
             <li class="slide">Result == Row</li>
@@ -535,16 +508,14 @@ sub good {
       $self-&gt;current_source_alias .
          '.rating' =&gt; { '&gt;=' =&gt; 4 },
    })
-};
+}
 sub cheap {
    my $self = shift;
    $self-&gt;search({
       $self-&gt;current_source_alias .
          '.price' =&gt; { '&lt;=' =&gt; 5}
    })
-};
-# ...
-1;
+}
       </pre>
    </div>
 
@@ -597,7 +568,7 @@ sub cheap {
    <div class="slide">
       <h2>bonus rel methods</h2>
 <pre class="brush: perl">my $book = $author-&gt;create_related(
-   <strong>books</strong> =&gt; {
+   books =&gt; {
       title =&gt; 'Another Discworld book',
    }
 );
@@ -641,8 +612,8 @@ use base 'DBIx::Class::Core';
 use DateTime::Format::MySQL;
 # Result code here
 __PACKAGE__-&gt;load_components('InflateColumn');
-__PACKAGE__-&gt;<strong>inflate_column</strong>(
-   <strong>date_published</strong> =&gt; {
+__PACKAGE__-&gt;inflate_column(
+   date_published =&gt; {
       inflate =&gt; sub {
          DateTime::Format::MySQL-&gt;parse_date(
             shift
