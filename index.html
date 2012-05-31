@@ -763,46 +763,6 @@ $rs-&gt;update({
    </div>
 
    <div class="slide">
-      <h2>DBIx::Class</h2>
-<li>  Brainchild of mst</li>
-<li>  Inspired by Class::DBI / Class::DBI::Sweet</li>
-<li>  Inherited large portion of API (and warts)</li>
-<li>  Widely popular</li>
-<li>  Just as widely misunderstood</li>
-   </div>
-
-   <div class="slide">
-      <h2>Misconceptions: What is DBIx::Class</h2><ul>
-<li>  A DBI extension? </li>
-<li>  ORM? </li>
-<li>  Framework? </li>
-   </div>
-
-   <div class="slide">
-      <h2>Misconceptions: What is DBIx::Class</h2><ul>
-<li>  A DBI extension? </li>
-<li>  ORM? </li>
-<li>  Framework? </li>
-<li>  NONE OF THE ABOVE (but a bit of each) </li>
-   </div>
-
-<div class="slide">
-      <h2>Flexible RDBMS de-hater</h2><ul>
-<li>Designed to work with flat-row based resultsets </li>
-<li>Currently <i>somewhat</i> rooted in SQL/DBI (lack of alternative use-cases) </li>
-<li>Individual layers are mostly independent (reports to the contrary welcome) </li>
-</div>
-
-<div class="slide">
-      <h2>Loosely coupled abstractions</h2><ul>
-<li>  Query definition/manipulation framework (DBIx::Class::ResultSet) </li>
-<li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI )) </li>
-<li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource) </li>
-<li>  Retrieved result parser (DBIx::Class::Row / DBIx::Class::ResultClass::HashRefInflator) </li>
-</div>
-
-
-   <div class="slide">
       <h2>Random example - SQL metaprogramming</h2>
     <pre style="font-size:80%">
     $shadow_rs->search({ shadow_val_title => 'stab' })->insert({
@@ -852,139 +812,7 @@ INSERT
       LIMIT '1'
     ),
   )
-
-     </div><div class="slide">
-      <h2>Confusing design</h2><ul>
-<li>Awkwardness is justified </li>
-<li>Gradually removed where it isn't (reports to the contrary welcome) </li>
-<li>Can be mostly ignored
-</dev>
-
-     </div><div class="slide">
-      <h2>Confusing design: Components</h2><ul>
-<li>  Roles in 2005
-<li>  <pre class="brush: perl">__PACKAGE__-&gt;load_components == multiple with statements</pre>
-<li>Writing a component is no different than writing a role
-<li>Using real Moose roles just works like it does everywhere else (courtesy of MooseX::NonMoose)
-<li>Multiple inheritance is not evil when you know what you are doing (and we do)
-</div>
-
-     <div class="slide">
-      <h2>Confusing design: Result Class / Core Components</h2><ul>
-<p><pre style="font-size:50%">
-use base 'DBIx::Class';
-__PACKAGE__->load_components('Core');
-
-   === (almost)
-
-use base 'DBIx::Class::Core';
-</div>
-
-     <div class="slide">
-      <h2>Confusing design: Result Class / Core Components</h2><ul>
-<p><pre style="font-size:50%">
-use base 'DBIx::Class';
-__PACKAGE__->load_components('Core');
-
-   === (almost)
-
-use base 'DBIx::Class::Core';
-
-   ===
-
-use base qw(
-  DBIx::Class::Relationship
-  DBIx::Class::Relationship::Helpers
-  DBIx::Class::Relationship::HasMany
-  DBIx::Class::Relationship::HasOne
-  DBIx::Class::Relationship::BelongsTo
-  DBIx::Class::Relationship::ManyToMany
-  DBIx::Class::Relationship::Accessor
-  DBIx::Class::Relationship::CascadeActions
-  DBIx::Class::Relationship::ProxyMethods
-  DBIx::Class::Relationship::Base
-  DBIx::Class::InflateColumn
-  DBIx::Class::PK::Auto
-  DBIx::Class::PK
-  DBIx::Class::Row
-  DBIx::Class::ResultSourceProxy::Table
-  DBIx::Class::ResultSourceProxy
-  DBIx::Class
-  DBIx::Class::Componentised
-  Class::C3::Componentised
-  DBIx::Class::AccessorGroup
-  Class::Accessor::Grouped
-)
-
-</div>
-
-
-     <div class="slide">
-      <h2>Confusing design: Result Source instances</h2><ul>
-<li>CDBI legacy, turned out to be extremely useful
-<li>Proxying<p>
-    <pre class="brush: perl">
-__PACKAGE__-&gt;add_column('name')
-      ===
-__PACKAGE__-&gt;result_source_instance-&gt;add_column('name')
-</pre>
-<li>JS-like prototypical OO with partial implicit cloning<p>
-<pre class="brush: perl">
-My::Schema::Result::Artist-&gt;has_many(...) (i.e. __PACKAGE__-&gt;has_many)
-  !=
-My::Schema-&gt;source('Artist')-&gt;has_many(...)
-  !=
-$schema-&gt;source('Artist')-&gt;has_many(...)
-</pre>
-</div>
-
-     <div class="slide">
-      <h2>Confusing design: Class data / Class::Accessor::Grouped</h2><ul>
-<li>The pre-moose way of doing sane attributes
-<li>First sane implementation of hybrid class/instance data
-<li>Gradual internals migration to Moo where it makes sense
-</ul><pre style="font-size:60%">
-
-__PACKAGE__->mk_group_accessor(simple_lazy_required => qw( food beer ));
-
-sub get_simple_lazy_required {
-  if (defined (my $v = $_[0]->get_simple($_[1]) ) ) {
-    return $v;
-  }
-  $_[0]->throw_exception("You must set '$_[1]' before accessing it");
-}
-
-sub set_simple_lazy_required {
-  shift->set_simple(@_);
-}
-</pre>
-
-
-     </div><div class="slide">
-      <h2>Confusing design: Class data / Class::Accessor::Grouped</h2>
- <p>
- <pre class="brush: perl">
-    __PACKAGE__-&gt;add_column('foo')
-
-among other things does
-
-    __PACKAGE__-&gt;mk_group_accessor(column =&gt; 'foo');
-</pre>
-
-     </div><div class="slide">
-      <h2>Confusing design: Class data / Class::Accessor::Grouped</h2>
- <p>
- <pre class="brush: perl">
-    __PACKAGE__-&gt;add_column('foo')
-
-among other things does
-
-    __PACKAGE__-&gt;mk_group_accessor(column =&gt; 'foo');
-</pre>
-<p>Ever heard of get_column() ?
-
-   </div>
-
+ </div>
 
 <div class="slide">
       <h2>Loosely coupled abstractions</h2><ul>
@@ -1019,7 +847,7 @@ among other things does
 </pre>
 </div>
 
-   </div><div class="slide">      <h2>Loosely coupled abstractions</h2>
+   </div><div class="slide">
 <h2>Query definition/manipulation framework (DBIx::Class::ResultSet)</h2><ul>
 <li>  Query plan (geared to a specific source)
 <li> Easily subclassable (load_namespaces - just name accordingly)
@@ -1033,7 +861,7 @@ among other things does
 <li> Inherits defaults from referenced Result Source (if any)
 <li><b>EVERYTHING IS OVERRIDABLE</b>
 
-   </div><div class="slide">      <h2>Loosely coupled abstractions</h2>
+   </div><div class="slide">
 <h2>Query definition language - not hardcoded (almost)</h2><ul>
 <li>SQL::Abstract current way of doing things
 <li>Trivial raw SQL passthrough:
@@ -1047,51 +875,9 @@ among other things does
   )
 </pre>
 <li>Can be changed to something else your current storage understands
-<li>Full migration to Data::Query by end of 2011
 </div>
 
 <div class="slide">
-      <h2>ResultSet Chains are Infinitely nestable</h2><ul>
-
-<li>    Shallow nesting (chaining)
-<pre class="brush: perl">
-    $rs-&gt;search({ name =&gt; { '!=', 'blah' }})
-        -&gt;search({ name =&gt; { '!=', undef }})
-
-    ... WHERE name != 'blah' AND name IS NOT null
-</pre>
-<li>    Subquery nesting
-<pre style="font-size:80%">
-    $rs-&gt;search({}, { distinct =&gt; 1 })
-        -&gt;as_subselect_rs
-         -&gt;search({}, { rows =&gt; 1 })
-
-    ... SELECT FROM (SELECT * FROM artist GROUP_BY * ) LIMIT 1
-</pre>
-   </div><div class="slide">
-      <h2>Relationship metadata traversal</h2><ul>
-<pre class="brush: perl">
-    $artist_rs-&gt;search_related('cds')
-               -&gt;search_related('artwork')
-                -&gt;search_related('artwork_to_artists')
-                 -&gt;search_related('artist')
-
-  FROM artist me
-    JOIN cd cds
-      ON cds.artist = me.artistid
-    JOIN cd_artwork artwork
-      ON artwork.cd_id = cds.cdid
-    JOIN artwork_to_artist artwork_to_artist
-      ON artwork_to_artist.artwork_cd_id = artwork.cd_id
-    JOIN artist artist
-      ON artist.artistid = artwork_to_artist.artist_id
-</pre>
-<li> Trivial to hide behind a ResultSet method:
-<pre class="brush: perl"> $artist_rs->my_cd_artwork_creators</pre>
-
-
-
-   </div><div class="slide">
       <h2>Overridable/augmentable default selection</h2><ul>
 <pre style="font-size:65%">
   $rs-&gt;search({}, { '+columns' =&gt; ['foo', { max_bar =&gt; \'MAX(bar)' }] });
@@ -1156,21 +942,7 @@ among other things does
 
    </div>
 
-
-
 <div class="slide">
-      <h2>Loosely coupled abstractions</h2><ul>
-<li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
-<li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))
-<li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
-<li>  Retrieved result parser (DBIx::Class::Row / DBIx::Class::ResultClass::HashRefInflator / &lt;your own class&gt;)
-</div>
-
-
-
-
-<div class="slide">
-      <h2>Storage Layer</h2>
 <h2>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))</h2><ul>
 <li>    Holds $dbh (almost like DBIx::Connector)
 <li>    Fork/thread and stale connection handling
@@ -1179,166 +951,22 @@ among other things does
 <li>    Buggy DBD workarounds (over 8000 loc)
 <li>    Could be shared between multiple $schema's
 <li>    Much more on the abstraction front
-<li>    Plans to put it standalone on CPAN in early 2012
-
-</div>
-
-
-<div class="slide">
-      <h2>Storage Layer</h2>
-<h2>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))</h2><ul>
-<li>Provides -&gt;dbh_do - NOTHING WRONG WITH USING IT<br>
-<pre class="brush: perl">
-  $schema-&gt;storage-&gt;dbh_do(sub {
-    return $_[1]-&gt;selectall_arrayref(
-      &lt;something unholy goes here>
-    )
-  });
-</pre>
-<li>Although $schema-&gt;txn_do is better
 </div>
 
 <div class="slide">
-      <h2>Loosely coupled abstractions</h2><ul>
-<li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
-<li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))
-<li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
-<li>  Retrieved result parser (DBIx::Class::Row / DBIx::Class::ResultClass::HashRefInflator)
-</div>
-
-   </div><div class="slide">
-      <h2>Schema</h2><ul>
-<li>  Bundles multiple ResultSources accessible over the same Storage instance
-<li>  Circular "where is my towel day"
-<li> Every ResultSource instance knows about its Schema and every Schema instance knows about its registered Sources
-
-</div>
-
-<div class="slide">
-      <h2>ResultSource</h2><ul>
-  <li>Standalone source metadata
-
-   </div><div class="slide">
-      <h2>Source name (->table)</h2><ul>
-<li>  (table/view/procedure/etc)
-<li>  Direct SQL expression
-
-   </div><div class="slide">
-      <h2>Columns (->add_columns)</h2><ul>
-<li>  Expected result definition
-<li>  Non-mandatory(!) selection defaults
-<li>  Accessor autogeneration
-<li>  Optional metadata (data_type, pre/postprocessing)
-
-   </div><div class="slide">
-      <h2>Constraint Hints</h2>
-      <h2>(->set_primary_columns / ->add_unique_constraint )</h2><ul>
-<li>  Also optional
-<li>  Good idea - see DBIx::Class::Manual::Intro::The_Significance_and_Importance_of_Primary_Keys
-
-   </div><div class="slide">
-      <h2>Relationships</h2>
-      <h2>( belongs_to / has_many / has_one / might_have ... )</h2><ul>
-<li>  Between standalone sources
-<li>  One way
-<li>  Express single JOIN
-
-   </div><div class="slide">
-      <h2>Relationship types</h2><ul>
-<li>  Arguably the worst CDBI legacy
-<pre class="brush: perl">
-  belongs_to -
-    "I have a (partially) dedicated column to hold
-     value(s) of *ANOTHER* Source's column(s)"
-
-  everything else -
-    "The other Source has a (partially) dedicated
-     column to hold the value(s) of *MY* column(s)"
-</pre>
-   </div>
-
-
-<div class="slide">
-      <h2>Loosely coupled abstractions</h2><ul>
-<li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
-<li>  Storage I/O abstraction layer (DBIx::Class::Storage(::DBI ))
-<li>  Data-Source/Relationship Model abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
-<li>  Retrieved result parser (DBIx::Class::Row / DBIx::Class::ResultClass::HashRefInflator)
-</div>
-
-<!--
-   <div class="slide">
-      <h2>SQL</h2><ul>
-  NOT Turing-Complete
-  Infinitely nestable
-  Limited amount of primitives
-
-SQL Statement Anatomy
-
-   <div class="slide">
-      <h2>SQL anatomy in evaluation order
-
-  Source
-    FROM artist
-
-  Semantic restriction
-    FROM artist WHERE name = 'queen'
-
-  Aggregation
-    FROM artist WHERE name = 'queen' GROUP BY first_name, last_name
-
-  Size restriction
-    FROM artist WHERE name = 'queen' GROUP BY first_name, last_name LIMIT 5
-
-  Selection
-    SELECT first_name, last_name FROM artist WHERE name = 'queen' GROUP BY first_name, last_name LIMIT 5
-
-  Not really SQL specific(!)
--->
-
-   </div><div class="slide">
       <h2>DBIx::Class::Core / DBIx::Class::Row</h2><ul>
 <li>  Data accessors
 <li>  Relationship Accessors
 <li>  Hooks to ResultSource/Schema/ResultSet instances
 <li>  Handy corresponding row manipulation methods
 <li>  Plugins (components/roles/whateveryouwannacallit)
+</div>
 
-   </div><div class="slide">
-      <h2>DBIx::Class::ResultClass::HashRefInflator</h2><ul>
-<li>  Plain hashes
-<li>  Respecting nesting of "as"-specification
-
-   </div><div class="slide">
+<div class="slide">
       <h2>Write your own result class</h2><ul>
 <li>  DBIC layers have *NO EXPECTATIONS* of result format
 
-   </div><div class="slide">
-      <h2>So what good is all of this?</h1><ul style="font-size:90%">
-
-      <li>  Data-Source/Relationship abstraction framework (DBIx::Class::Schema/DBIx::Class::ResultSource)
-<ul>
-<li>    Templated generation of source definitions
-<li>    Subsequent deploy()
-</ul>
-
-      <li>  Query definition/manipulation framework (DBIx::Class::ResultSet)
-<ul>
-<li>    Override query primitives
-<li>    Use your own SQL definition language
-<li>    Use a language to work with non-SQL storages
-</ul>
-
-      <li>  Storage I/O abstraction layer (DBIx::Class::Storage (::DBI )
-<ul>
-<li>    Reduced headaches when switching databases
-<li>    Reduced (but not eliminated) cursing of DBD authors
-</ul>
-      <li>  Retrieved result parser (DBIx::Class::Row / DBIx::Class::ResultClass::HashRefInflator)
-<ul>
-<li>    ANYTHING YOU CAN POSSIBLY IMAGINE
-</ul>
-   </div>
+</div>
 
 </div>
    <div class="slide">
