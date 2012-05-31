@@ -472,6 +472,10 @@ my $schema = Foo::Schema-&gt;connect(
    </div>
 
    <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Schema::LintContents">::Helper::Schema::LintContents</a></h2>
+   </div>
+
+   <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Candy">::Candy</a></h2>
       <p>Use this to avoid carpel tunnel (no more __PACKAGE__)</p>
    </div>
@@ -491,6 +495,10 @@ my $schema = Foo::Schema-&gt;connect(
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h2>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::DeploymentHandler">::DeploymentHandler</a></h2>
    </div>
 
    <div class="slide">
@@ -968,7 +976,49 @@ INSERT
 
 </div>
 
-</div>
+   <div class="slide">
+      <h2>Useful ResultSet Methods</h2>
+      <ol>
+         <li>
+<pre class="brush: perl">
+sub with_all_computers_count {
+   my $self = shift;
+
+   $self-&gt;search(undef, {
+      '+columns' =&gt; {
+         all_computers_count =&gt;
+            $self-&gt;correlate('computers')-&gt;count_rs-&gt;as_query
+      },
+   })
+}
+</pre>
+         </li>
+         <li>
+<pre class="brush: perl">
+sub nada {
+   shift-&gt;search(undef, { 'columns' =&gt; [] })
+}
+</pre>
+         </li>
+         <li>
+<pre class="brush: perl">
+sub self_rs {}
+</pre>
+<pre class="brush: perl">
+sub all_computers_count {
+   my $self = shift;
+
+   if ($self-&gt;has_column_loaded('all_computers_count')) {
+      return $self-&gt;get_column('all_computers_count')
+   } else {
+      return $self-&gt;self_rs-&gt;nada-&gt;with_all_computers_count-&gt;get_column('all_computers_count')-&gt;next
+   }
+}
+</pre>
+         </li>
+      </ol>
+   </div>
+
    <div class="slide">
       <h1>Questions?</h1>
    </div>
