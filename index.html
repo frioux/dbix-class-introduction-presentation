@@ -1022,6 +1022,14 @@ sub succeeded_computers {
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM">::Helper::Row::RelationshipDWIM</a></h2>
       <p>USE THIS to avoid carpel tunnel (has_many cars =&gt; 'Cars', ...)</p>
+      <pre class="brush: perl">
+
+      use DBIx::Class::Candy -components =&gt; [
+         'Helper::Row::RelationshipDWIM'
+      ];
+      belongs_to type =&gt; '::Type', 'type_id';
+
+      </pre>
    </div>
 
    <div class="slide">
