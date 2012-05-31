@@ -410,95 +410,7 @@ my $schema = Foo::Schema-&gt;connect(
    <div class="slide">
       <h2>Extensible</h2>
       <p>DBIx::Class helped pioneer fast MI in Perl 5 with Class::C3, so it is made
-      to allow extensions to nearly every part of it.</p>
-   </div>
-
-   <div class="slide">
-      <h2>DBIx::Class Components</h2>
-      <h4>NOT ALL ME, LOTS OF AUTHORS</h4>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::TimeStamp">::TimeStamp</a></h2>
-      <p>USE THIS for any kind of timestamp (set on create or set on update)</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::EncodedColumn">::EncodedColumn</a></h2>
-      <p>USE THIS for password columns</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::IgnoreWantarray">::Helper::ResultSet::IgnoreWantarray</a></h2>
-      <p>USE THIS for less surprising resultsets (must call -&gt;all)</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::OnColumnChange">::Helper::Row::OnColumnChange</a></h2>
-      <p>USE THIS to do something when a value changes (per column)</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SetOperations">::Helper::ResultSet::SetOperations</a></h2>
-      <p>USE THIS to use UNION and other set ops with DBIC</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM">::Helper::Row::RelationshipDWIM</a></h2>
-      <p>USE THIS to avoid carpel tunnel (has_many cars =&gt; 'Cars', ...)</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::StorageValues">::Helper::Row::StorageValues</a></h2>
-      <p>USE THIS to keep track of what's in the DB before you call update and after you use an accessor</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::SubClass">::Helper::Row::SubClass</a></h2>
-      <p>USE THIS to subclass parts of your schema (deprecated by new versions of Class::C3::Componentised)</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::ToJSON">::Helper::Row::ToJSON</a></h2>
-      <p>USE THIS to generate a sensible TO_JSON method</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::CorrelateRelationship">::Helper::ResultSet::CorrelateRelationship</a></h2>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SearchOr">::Helper::ResultSet::SearchOr</a></h2>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Schema::LintContents">::Helper::Schema::LintContents</a></h2>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Candy">::Candy</a></h2>
-      <p>Use this to avoid carpel tunnel (no more __PACKAGE__)</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::ResultClassDWIM">::Helper::ResultSet::ResultClassDWIM</a></h2>
-      <p>Use this to avoid carpel tunnel ( result_class =&gt; '::HRI' )</p>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::RemoveColumns">::Helper::ResultSet::RemoveColumns</a></h2>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::Random">::Helper::ResultSet::Random</a></h2>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h2>
-   </div>
-
-   <div class="slide">
-      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::DeploymentHandler">::DeploymentHandler</a></h2>
+      to allow extensions to nearly every part of it. (more slides about components later)</p>
    </div>
 
    <div class="slide">
@@ -771,6 +683,10 @@ $rs-&gt;update({
    </div>
 
    <div class="slide">
+      <h1>Advanced</h1>
+   </div>
+
+   <div class="slide">
       <h2>Random example - SQL metaprogramming</h2>
     <pre style="font-size:80%">
     $shadow_rs->search({ shadow_val_title => 'stab' })->insert({
@@ -975,6 +891,186 @@ INSERT
 <li>  DBIC layers have *NO EXPECTATIONS* of result format
 
 </div>
+
+   <div class="slide">
+      <h2>DBIx::Class Components</h2>
+      <h4>NOT ALL ME, LOTS OF AUTHORS</h4>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Candy">::Candy</a></h2>
+      <p>Use this to avoid carpel tunnel (no more __PACKAGE__)</p>
+      <pre class="brush: perl">
+package Lynx::SMS::Schema::Result::Price;
+
+use Lynx::SMS::Schema::Candy; # special subclass
+
+primary_column id =&gt; {
+  data_type =&gt; 'int',
+  is_auto_increment =&gt; 1,
+};
+
+column part_code =&gt; {
+  data_type =&gt; 'varchar',
+  size      =&gt; 15,
+};
+
+column description =&gt; {
+  data_type       =&gt; 'text',
+  is_serializable =&gt; 1,
+};
+
+column type_id          =&gt; { data_type =&gt; 'int' };
+column credits_per_year =&gt; { data_type =&gt; 'int' };
+column list_price       =&gt; { data_type =&gt; 'money' };
+column gsa_price        =&gt; { data_type =&gt; 'money' };
+
+1;
+      </pre>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::TimeStamp">::TimeStamp</a></h2>
+      <p>USE THIS for any kind of timestamp (set on create or set on update)</p>
+      <p>Caveat: any bugs in DateTime are also in this</p>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::EncodedColumn">::EncodedColumn</a></h2>
+      <p>USE THIS for password columns</p>
+      <pre class="brush: perl">
+use DBIx::Class::Candy -components =&gt; ['EncodedColumn'];
+column password =&gt; {
+   is_serializable =&gt; 0,
+   data_type     =&gt; 'CHAR',
+   size          =&gt; 59,
+   encode_column =&gt; 1,
+   encode_class  =&gt; 'Crypt::Eksblowfish::Bcrypt',
+   encode_args   =&gt; { key_nul =&gt; 0, cost =&gt; 8 },
+   encode_check_method =&gt; 'check_password',
+};
+</pre>
+
+<p>Later..</p>
+   <pre class="brush: perl">die "liar!" unless $user-&gt;check_password($input)</pre>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::IgnoreWantarray">::Helper::ResultSet::IgnoreWantarray</a></h2>
+      <p>USE THIS for less surprising resultsets (must call -&gt;all)</p>
+      <pre class="brush: perl">
+      print_rs($rs-&gt;search(...)); # &lt;3
+      print_row($_) for $rs-&gt;search(...)-&gt;all; # &lt;3
+      </pre>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::OnColumnChange">::Helper::Row::OnColumnChange</a></h2>
+      <p>USE THIS to do something when a value changes (per column)</p>
+      <pre class="brush: perl">
+use DBIx::Class::Candy -components =&gt; [
+   'Helper::Row::OnColumnChange'
+];
+
+after_column_change kind_of_id =&gt; {
+   txn_wrap =&gt; 1,
+   method   =&gt; '_fix_for_updates',
+};
+
+sub _fix_for_updates {
+   my ( $self, $old, $new ) = @_;
+
+   $self-&gt;_set_materialized_path;
+
+   $_-&gt;_fix_for_updates for $self-&gt;direct_kinds-&gt;all
+}
+      </pre>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SetOperations">::Helper::ResultSet::SetOperations</a></h2>
+      <p>USE THIS to use UNION and other set ops with DBIC</p>
+      (excuse this insane example)
+      <pre class="brush: perl">
+sub succeeded_computers {
+   my $self = shift;
+
+   my $c_links = $self-&gt;test_computer_links;
+   my $d_links = $self-&gt;test_device_links;
+
+   my $failed_ids =
+      $c_links-&gt;failed-&gt;related_resultset('computer')-&gt;union(
+         $c_links-&gt;untested-&gt;related_resultset('computer'),
+      )-&gt;union_with_devices(
+         $d_links-&gt;failed-&gt;related_resultset('device')-&gt;union(
+            $d_links-&gt;untested-&gt;related_resultset('device'),
+         )
+      )-&gt;get_column('id')-&gt;as_query;
+
+   $self-&gt;result_source-&gt;schema-&gt;resultset('Computer')-&gt;search({
+      id =&gt; {
+         -not_in =&gt; $failed_ids,
+         -in     =&gt; $c_links-&gt;related_resultset('computer')-&gt;union_with_devices(
+                       $d_links-&gt;related_resultset('device')
+                    )-&gt;get_column('id')-&gt;as_query
+      }
+   });
+}
+      </pre>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM">::Helper::Row::RelationshipDWIM</a></h2>
+      <p>USE THIS to avoid carpel tunnel (has_many cars =&gt; 'Cars', ...)</p>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::StorageValues">::Helper::Row::StorageValues</a></h2>
+      <p>USE THIS to keep track of what's in the DB before you call update and after you use an accessor</p>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::SubClass">::Helper::Row::SubClass</a></h2>
+      <p>USE THIS to subclass parts of your schema (deprecated by new versions of Class::C3::Componentised)</p>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::ToJSON">::Helper::Row::ToJSON</a></h2>
+      <p>USE THIS to generate a sensible TO_JSON method</p>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::CorrelateRelationship">::Helper::ResultSet::CorrelateRelationship</a></h2>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SearchOr">::Helper::ResultSet::SearchOr</a></h2>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Schema::LintContents">::Helper::Schema::LintContents</a></h2>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::ResultClassDWIM">::Helper::ResultSet::ResultClassDWIM</a></h2>
+      <p>Use this to avoid carpel tunnel ( result_class =&gt; '::HRI' )</p>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::RemoveColumns">::Helper::ResultSet::RemoveColumns</a></h2>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::Random">::Helper::ResultSet::Random</a></h2>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h2>
+   </div>
+
+   <div class="slide">
+      <h2><a href="http://beta.metacpan.org/module/DBIx::Class::DeploymentHandler">::DeploymentHandler</a></h2>
+   </div>
 
    <div class="slide">
       <h2>Useful ResultSet Methods</h2>
