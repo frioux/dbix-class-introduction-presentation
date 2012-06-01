@@ -684,7 +684,7 @@ my $rs = $schema-&gt;resultset('CD')-&gt;search({
 });
 
 $rs-&gt;update({
-   price =&gt; \['price + ?', [inc =&gt; $inc]],
+   price =&gt; \['price + ?', [{} =&gt; $inc]],
 });
 </pre>
    </div>
