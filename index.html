@@ -333,7 +333,7 @@ my $book = $book_rs-&gt;search({
       "$other.shared" =&gt; 1,
     },
     $self &amp;&amp; {
-       "$him.user"     =&gt; $self-&gt;user,
+       "$other.user"     =&gt; $self-&gt;user,
        "$other.shared" =&gt; 1,
     });
   },
