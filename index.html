@@ -1060,11 +1060,27 @@ sub succeeded_computers {
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::StorageValues">::Helper::Row::StorageValues</a></h2>
       <p>USE THIS to keep track of what's in the DB before you call update and after you use an accessor</p>
+
+      <pre class="brush: perl">
+      use DBIx::Class::Candy -components =&gt; [ 'Helper::Row::StorageValues' ];
+
+      # use OnColumnChange for this, just an example (has bug)
+      sub update {
+         my $self = shift;
+         log_trace {
+            "name changing from " . $self-&gt;storage_value('name') .
+               " to " . $self-&gt;name
+         };
+
+         $self-&gt;next::method(@_);
+      }
+      </pre>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::SubClass">::Helper::Row::SubClass</a></h2>
       <p>USE THIS to subclass parts of your schema (deprecated by new versions of Class::C3::Componentised)</p>
+      <p>automatically makes sure to set the same table and tries it's best to copy rels</p>
    </div>
 
    <div class="slide">
@@ -1074,35 +1090,71 @@ sub succeeded_computers {
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::CorrelateRelationship">::Helper::ResultSet::CorrelateRelationship</a></h2>
+      <p>USE THIS for getting aggregates (and other things)</p>
+      <p>see later slide for in depth example</p>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::SearchOr">::Helper::ResultSet::SearchOr</a></h2>
+      <p>USE THIS to reuse even more resultset methods</p>
+      <ul>
+         <li class="slide">search is "additive" (ANDs)</li>
+         <li class="slide">search_or is safely not additive</li>
+      </ul>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Schema::LintContents">::Helper::Schema::LintContents</a></h2>
+      <p>USE THIS to check if the contents of your database are in good shape</p>
+      <ul>
+         <li class="slide">Can check for duplicate PKs and UCs</li>
+         <li class="slide">Can check for broken FKs</li>
+      </ul>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::ResultClassDWIM">::Helper::ResultSet::ResultClassDWIM</a></h2>
-      <p>Use this to avoid carpel tunnel ( result_class =&gt; '::HRI' )</p>
+      <p>USE THIS to avoid carpel tunnel ( result_class =&gt; '::HRI' )</p>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::RemoveColumns">::Helper::ResultSet::RemoveColumns</a></h2>
+      <p>Use this to remove columns from selection in a succicnt fashion</p>
+
+      <pre class="brush: perl">
+         $rs-&gt;search(undef, {
+            remove_columns =&gt; ['password'],
+         })
+      </pre>
+      vs
+      <pre class="brush: perl">
+         $rs-&gt;search(undef, {
+            columns =&gt; [qw(id username email fullname ... )],
+         })
+      </pre>
+      <p>Not just less to type, also more robust</p>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::Random">::Helper::ResultSet::Random</a></h2>
+      <p>Use this to grab random rows from a resultset</p>
+
+      <pre class="brush: perl">
+         my $rand = $rs-&gt;rand(1)-&gt;next;
+      </pre>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h2>
+      <p>Use this to reduce boilerplate involved in creating join tables</p>
    </div>
 
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::DeploymentHandler">::DeploymentHandler</a></h2>
+      <ul>
+         <li class="slide">Generate DDL for migrations automatically with SQLT</li>
+         <li class="slide">Run Perl and raw SQL for migrations safely (with txns, durable(S::L), etc)</li>
+      </ul>
    </div>
 
    <div class="slide">
