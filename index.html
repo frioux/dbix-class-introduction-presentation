@@ -963,6 +963,15 @@ column password =&gt; {
    </div>
 
    <div class="slide">
+      <h2>Detour: Context--</h2>
+      <pre class="brush: perl">my @foo = $rs-&gt;search(...)</pre>
+      <p>vs</p>
+      <pre class="brush: perl">my $foo = $rs-&gt;search(...)</pre>
+      <p>or more importantly...</p>
+      <pre class="brush: perl">$foo-&gt;bar($rs-&gt;search(...))</pre>
+   </div>
+
+   <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::ResultSet::IgnoreWantarray">::Helper::ResultSet::IgnoreWantarray</a></h2>
       <p>USE THIS for less surprising resultsets (must call -&gt;all)</p>
       <pre class="brush: perl">
