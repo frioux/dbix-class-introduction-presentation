@@ -297,6 +297,13 @@ my $book = $book_rs-&gt;search({
       <h2>Non-column methods</h2>
       <p>Need a method to get a user's gravatar URL?  Add a
       gravatar_url method to their Result class</p>
+
+      <pre class="brush: perl">
+         use Gravatar::URL ();
+         sub gravatar_url {
+            Gravatar::URL::gravatar_url({ email =&gt; $_[0]-&gt;email })
+         }
+      </pre>
    </div>
 
    <div class="slide">
