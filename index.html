@@ -129,8 +129,8 @@
    </div>
 
    <div class="slide">
-      <h2>SQL: Create</h2>
-<pre class="brush: perl">my $sth = $dbh-&gt;prepare('
+      <h2>Create</h2>
+<div style="float: left; width: 49% !important"><pre class="brush: perl">my $sth = $dbh-&gt;prepare('
    INSERT INTO books
    (title, author_id)
    values (?,?)
@@ -138,20 +138,16 @@
 
 $sth-&gt;execute(
   'A book title', $author_id
-);</pre>
-   </div>
+);</pre></div>
 
-   <div class="slide">
-      <h2>DBIC: Create</h2>
-<pre class="brush: perl">my $book = $book_rs-&gt;create({
+<div class="slide" style="float: right; width: 49% !important"><pre class="brush: perl">my $book = $book_rs-&gt;create({
    title     =&gt; 'A book title',
    author_id =&gt; $author_id,
-});</pre>
+});</pre></div>
       <ul>
          <li class="slide"><a href="http://metacpan.org/module/DBIx::Class::ResultSet#create">create</a></li>
          <li class="slide">No need to pair placeholders and values</li>
          <li class="slide">Automatically gets autoincremented id for you</li>
-         <li class="slide">Transparently uses INSERT ... RETURNING for databases that support it</li>
       </ul>
    </div>
 
