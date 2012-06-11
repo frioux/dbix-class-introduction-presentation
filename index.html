@@ -1160,7 +1160,7 @@ sub succeeded_computers {
    <div class="slide">
       <h2>Useful ResultSet Methods</h2>
       <ol>
-         <li>
+         <li class=slide>
 <pre class="brush: perl">
 sub with_all_computers_count {
    my $self = shift;
@@ -1174,29 +1174,7 @@ sub with_all_computers_count {
 }
 </pre>
          </li>
-         <li>
-<pre class="brush: perl">
-sub nada {
-   shift-&gt;search(undef, { 'columns' =&gt; [] })
-}
-</pre>
-         </li>
-         <li>
-<pre class="brush: perl">
-sub self_rs {}
-</pre>
-<pre class="brush: perl">
-sub all_computers_count {
-   my $self = shift;
-
-   if ($self-&gt;has_column_loaded('all_computers_count')) {
-      return $self-&gt;get_column('all_computers_count')
-   } else {
-      return $self-&gt;self_rs-&gt;nada-&gt;with_all_computers_count-&gt;get_column('all_computers_count')-&gt;next
-   }
-}
-</pre>
-         </li>
+         <li class=slide> <a href="http://metacpan.org/module/DBIx::Class::Helper::Row::ProxyResultSetMethod">::Helper::Row::ProxyResultSetMethod</a> </li>
       </ol>
    </div>
 
