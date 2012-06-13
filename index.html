@@ -664,7 +664,7 @@ for (@res) {
       <h2><a href="http://metacpan.org/module/DBIx::Class::Manual::Cookbook#Subqueries">Subquery</a> Support</h2>
 <pre class="brush: perl">my $inside_query = $schema-&gt;resultset('Artist')
    -&gt;search({
-    name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
+    name =&gt; [ 'Billy Joel', 'Iron Maiden' ],
 })-&gt;get_column('id')-&gt;as_query;
 
 my $rs = $schema-&gt;resultset('CD')-&gt;search({
