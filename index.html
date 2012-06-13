@@ -1167,6 +1167,18 @@ sub succeeded_computers {
    <div class="slide">
       <h2><a href="http://beta.metacpan.org/module/DBIx::Class::Helper::Row::JoinTable">::Helper::Row::JoinTable</a></h2>
       <p>Use this to reduce boilerplate involved in creating join tables</p>
+      <pre class="brush: perl">
+ package MyApp::Schema::Result::Foo_Bar;
+
+ use DBIx::Class::Candy -components => ['Helper::Row::JoinTable'];
+
+ join_table {
+    left_class   => 'Foo',
+    left_method  => 'foo',
+    right_class  => 'Bar',
+    right_method => 'bar',
+ };
+      </pre>
    </div>
 
    <div class="slide">
