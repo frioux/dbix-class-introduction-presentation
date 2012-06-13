@@ -1207,7 +1207,17 @@ sub with_all_computers_count {
 }
 </pre>
          </li>
-         <li class=slide> <a href="http://metacpan.org/module/DBIx::Class::Helper::Row::ProxyResultSetMethod">::Helper::Row::ProxyResultSetMethod</a> </li>
+         <li class=slide> <a href="http://metacpan.org/module/DBIx::Class::Helper::Row::ProxyResultSetMethod">::Helper::Row::ProxyResultSetMethod</a>
+         <pre class="brush: perl">
+package MyApp::Schema::Result::Test;
+
+use DBIx::Class::Candy -components => [
+   'Helper::Row::ProxyResultSetMethod',
+];
+
+proxy_resultset_method =&gt; 'all_computers_count';
+         </pre>
+         </li>
       </ol>
    </div>
 
