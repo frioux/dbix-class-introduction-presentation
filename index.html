@@ -787,21 +787,7 @@ INSERT
 <li> Inherits defaults from referenced Result Source (if any)
 <li><b>EVERYTHING IS OVERRIDABLE</b>
 
-   </div><div class="slide">
-<h2>Query definition language - not hardcoded (almost)</h2><ul>
-<li>SQL::Abstract current way of doing things
-<li>Trivial raw SQL passthrough:
-<pre class="brush: perl">
-  $schema-&gt;resultset('Artist')-&gt;search(
-    \[
-      'any sql you want here ? with ? bindvals',
-      [ {}, 'bind_val_1' ],
-      [ {}, 'bind_val_2' ],
-    ]
-  )
-</pre>
-<li>Can be changed to something else your current storage understands
-</div>
+   </div>
 
 <div class="slide">
       <h2>Overridable/augmentable default selection</h2><ul>
@@ -809,7 +795,7 @@ INSERT
   $rs-&gt;search({}, { '+columns' =&gt; ['foo', { max_bar =&gt; \'MAX(bar)' }] });
   $rs-&gt;search({}, { select =&gt; 'multi_value_func', as =&gt; [qw(val1 val2)] });
 </pre>
-<li> Currently does not create accessors on the fly, planned feature
+<li> Currently does not create accessors on the fly
 
    </div><div class="slide">
       <h2 style="font-size:81%">Overridable/augmentable default selection: AS IS NOT AS</h2><ul>
