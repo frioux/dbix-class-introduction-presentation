@@ -696,7 +696,7 @@ $rs-&gt;update({
 
       shadow_stage => 2,
 
-      shadow_timestamp => 666,
+      shadow_timestamp => 12345678,
 
       shadowed_lifecycle => \"(
         SELECT COALESCE( MAX( shadowed_lifecycle ), 0 ) + 1 FROM $shadow_table
@@ -723,7 +723,7 @@ INSERT
     rel_shadw_artists_lifecycle
   ) VALUE (
     '2',
-    '666',
+    '12345678',
     'stab',
     '2',
     (
