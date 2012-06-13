@@ -1096,6 +1096,30 @@ sub succeeded_computers {
       <ul>
          <li class="slide">search is "additive" (ANDs)</li>
          <li class="slide">search_or is safely not additive</li>
+         <li class="slide">
+         <pre class="brush: perl">
+         $artists_rs-&gt;touring-&gt;has_record_label
+         </pre>
+         </li>
+
+         <li class="slide">
+         vs.
+         <pre class="brush: perl">
+         $artists_rs-&gt;search_or([
+            $artist_rs-&gt;touring
+            $artist_rs-&gt;has_record_label
+         ])
+         </pre>
+         </li>
+
+         <li class="slide">
+         vs.
+         <pre class="brush: perl">
+         $artists_rs-&gt;touring-&gt;union([
+            $artist_rs-&gt;has_record_label
+         ])
+         </pre>
+         </li>
       </ul>
    </div>
 
