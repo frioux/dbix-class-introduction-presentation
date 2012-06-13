@@ -615,14 +615,11 @@ $rsc-&gt;sum;
    <div class="slide">
       <h2>Aggregates</h2>
 <pre class="brush: perl">my @res = $rs-&gt;search({}, {
-   select   =&gt; [
+   columns   =&gt; [
       'price',
       'genre',
-      { max =&gt; price },
-      { avg =&gt; price },
-   ],
-   as       =&gt; [
-      qw(price genre max_price avg_price)
+      { max_price =&gt; { max =&gt; price } },
+      { avg_price =&gt; { avg =&gt; price } },
    ],
    group_by =&gt; [qw(price genre)],
 });
@@ -632,8 +629,7 @@ for (@res) {
    say $_-&gt;get_column('min_price');
 }</pre>
    <ul>
-      <li class="slide"><a href="http://metacpan.org/module/DBIx::Class::ResultSet#select">select</a></li>
-      <li class="slide"><a href="http://metacpan.org/module/DBIx::Class::ResultSet#as">as</a></li>
+      <li class="slide"><a href="http://metacpan.org/module/DBIx::Class::ResultSet#columns">columns</a></li>
       <li class="slide"><a href="http://metacpan.org/module/DBIx::Class::ResultSet#group_by">group_by</a></li>
    </ul>
    </div>
