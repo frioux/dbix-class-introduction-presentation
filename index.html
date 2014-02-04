@@ -164,6 +164,8 @@ $sth-&gt;execute(
    WHERE books.author = authors.id
 ');
 
+$sth-&gt;execute;
+
 while( my $book = $sth-&gt;fetchrow_hashref() ) {
   print 'Author of '
      . $book-&gt;{title}
